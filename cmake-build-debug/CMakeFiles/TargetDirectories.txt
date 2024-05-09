@@ -1,0 +1,3 @@
+C:/Users/pkury/CLionProjects/PJC-Game/cmake-build-debug/CMakeFiles/PJC_Game.dir
+C:/Users/pkury/CLionProjects/PJC-Game/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/pkury/CLionProjects/PJC-Game/cmake-build-debug/CMakeFiles/rebuild_cache.dir
