@@ -8,10 +8,15 @@
 Tile::Tile(sf::Vector2i tPosition,const  sf::Texture& t, float x, float y, bool isPass, bool exit){
     texturePos = tPosition;
     texture = t;
+    scale = 1;
     pos = sf::Vector2f(x,y);
     sprite.setPosition(pos);
     isPassable = isPass;
     isExit = exit;
+    left = sprite.getPosition().x;
+    right = sprite.getPosition().x + (sprite.getLocalBounds().width * scale);
+    top = sprite.getPosition().y;
+    bottom = sprite.getPosition().y + (sprite.getLocalBounds().height * scale);
     createSprite();
 }
 

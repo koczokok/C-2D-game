@@ -13,6 +13,11 @@ public:
     sf::Vector2i texturePos;
     sf::Texture texture;
     sf::Sprite sprite;
+    float top;
+    float bottom;
+    float left;
+    float right;
+    int scale;
     Tile(sf::Vector2i, const sf::Texture&, float, float, bool, bool);
     bool createSprite();
 
