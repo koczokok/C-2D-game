@@ -5,23 +5,18 @@
 #include "tile.h"
 #include <fmt/core.h>
 
-Character::Character(std::string textureName, sf::Vector2f position, sf::Vector2f size, sf::Vector2f v, float mS) {
+Character::Character(std::string textureName, sf::Vector2f texturePos, sf::Vector2f position, sf::Vector2f size, sf::Vector2f v, float shootTimer) {
     if(!characterTexture.loadFromFile("../" + textureName)){
         fmt::println("{}", "I'm fuckeed");
     }
+    this->shootTimer = shootTimer;
     characterSprite.setTexture(characterTexture);
-    characterSprite.setTextureRect(sf::IntRect(0,0,16,16));
+    characterSprite.setTextureRect(sf::IntRect(texturePos.x,texturePos.y,16,16));
     characterSprite.setPosition(position.x,position.y);
     projectiles = std::vector<Projectile *>();
     velocity = v;
 }
 
-void Character::updatePosition(float d, float a, float b, float c) {
-    left = characterSprite.getPosition().x;
-    right = characterSprite.getPosition().x + (characterSprite.getLocalBounds().width);
-    up = characterSprite.getPosition().y;
-    bottom = characterSprite.getPosition().y + (characterSprite.getLocalBounds().height);
-}
 
 void Character::collide(Tile * tile ) {
     auto playerBound = characterSprite.getGlobalBounds();
@@ -73,9 +68,7 @@ void Character::collide(Tile * tile ) {
     }
 }
 
-void Character::shoot(){
 
-}
 
 void Character::updateMovement(bool up, bool down, bool right, bool left) {
     if(right){
@@ -96,7 +89,20 @@ void Character::updateMovement(bool up, bool down, bool right, bool left) {
     if(!(up or down)){
         velocity.y = 0;
     }
+    characterSprite.setPosition(characterSprite.getPosition().x + velocity.x, characterSprite.getPosition().y + velocity.y);
 }
 
 
+void Character::checkProjectileCollisions(Tile *tile) {
+    auto tileBound = tile->sprite.getGlobalBounds();
+
+    for (auto p : projectiles) {
+
+        if (tileBound.intersects(p ->circle.getGlobalBounds()) && !tile->isPassable) {
+            auto iter = std::ranges::find(projectiles, p);
+            projectiles.erase(iter);
+            fmt::println("{}", "Proj dead");
+        }
+    }
+}
 

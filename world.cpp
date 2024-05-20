@@ -9,7 +9,6 @@
 #include "fmt/core.h"
 
 World::World() {
-
     setUpInitialState();
 }
 
@@ -37,10 +36,10 @@ void World::setUpInitialState() {
 
                     if (!isdigit(x) || !isdigit(y))
                         tempMap.push_back(
-                                new Tile(sf::Vector2i(-1, -1), texture, tempMap.size() * 16, c * 16, !p, e));
+                                new Tile(sf::Vector2i(-1, -1), texture, sf::Vector2f(tempMap.size() * 16,c * 16), !p, e));
                     else
                         tempMap.push_back(
-                                new Tile(sf::Vector2i(x - '0', y - '0'), texture, tempMap.size() * 16, c * 16, !p,
+                                new Tile(sf::Vector2i(x - '0', y - '0'), texture,sf::Vector2f(tempMap.size() * 16, c * 16), !p,
                                          e));
                 }
             }

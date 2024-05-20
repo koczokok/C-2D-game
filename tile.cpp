@@ -5,11 +5,11 @@
 #include "fmt/core.h"
 
 
-Tile::Tile(sf::Vector2i tPosition,const  sf::Texture& t, float x, float y, bool isPass, bool exit){
+Tile::Tile(sf::Vector2i tPosition,const  sf::Texture& t, sf::Vector2f p, bool isPass, bool exit){
     texturePos = tPosition;
     texture = t;
     scale = 1;
-    pos = sf::Vector2f(x,y);
+    pos = p;
     sprite.setPosition(pos);
     isPassable = isPass;
     isExit = exit;
@@ -23,11 +23,8 @@ Tile::Tile(sf::Vector2i tPosition,const  sf::Texture& t, float x, float y, bool 
 
 
 bool Tile::createSprite() {
-
-
     sprite.setTexture(texture);
     sprite.setTextureRect(sf::IntRect(texturePos.x *16,texturePos.y * 16,16,16));
-
     fmt::println("{}, {}", "Worked2", isPassable);
     return 0;
 }

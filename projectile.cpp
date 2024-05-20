@@ -12,8 +12,8 @@ Projectile::Projectile(std::string textureName, sf::Vector2f pos, sf::Vector2f v
 //    sprite.setTextureRect(sf::IntRect(0,0,16,16));
 //    sprite.setPosition(pos);
     circle.setFillColor(sf::Color::Red);
-    circle.setRadius(5.f);
-    circle.setPosition(100,100);
+    circle.setRadius(2.5);
+    circle.setPosition(pos);
     velocity = vel;
 }
 

@@ -18,7 +18,7 @@ public:
     float left;
     float right;
     int scale;
-    Tile(sf::Vector2i, const sf::Texture&, float, float, bool, bool);
+    Tile(sf::Vector2i, const sf::Texture&, sf::Vector2f, bool, bool);
     bool createSprite();
 
 };
