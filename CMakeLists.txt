@@ -29,6 +29,8 @@ add_executable(PJC_Game main.cpp
         world.cpp
         character.h
         character.cpp
+        projectile.h
+        projectile.cpp
 )
 
 target_link_libraries(PJC_Game sfml-graphics)

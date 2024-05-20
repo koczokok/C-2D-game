@@ -4,7 +4,7 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 #include "tile.h"
-
+#include "projectile.h"
 #ifndef PJC_GAME_CHARACTER_H
 #define PJC_GAME_CHARACTER_H
 
@@ -14,8 +14,8 @@ public:
     sf::Texture characterTexture;
     sf::Sprite characterSprite;
     sf::Vector2f velocity;
-    bool isCollide;
-    float movementSpeed;
+    std::vector<Projectile *> projectiles;
+    void shoot();
     float bottom, left, right, up;
     void updatePosition(float, float, float, float);
     void collide(Tile * tile);

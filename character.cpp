@@ -9,11 +9,10 @@ Character::Character(std::string textureName, sf::Vector2f position, sf::Vector2
     if(!characterTexture.loadFromFile("../" + textureName)){
         fmt::println("{}", "I'm fuckeed");
     }
-    movementSpeed = mS;
-    isCollide = false;
     characterSprite.setTexture(characterTexture);
     characterSprite.setTextureRect(sf::IntRect(0,0,16,16));
     characterSprite.setPosition(position.x,position.y);
+    projectiles = std::vector<Projectile *>();
     velocity = v;
 }
 
@@ -72,6 +71,10 @@ void Character::collide(Tile * tile ) {
             }
         }
     }
+}
+
+void Character::shoot(){
+
 }
 
 void Character::updateMovement(bool up, bool down, bool right, bool left) {

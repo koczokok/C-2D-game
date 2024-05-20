@@ -57,25 +57,32 @@ int main() {
 //            character2.characterSprite.move(0,-5);
 //        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down) &&  characterSprite.getPosition().y < window.getSize().y - 16)
 //            character2.characterSprite.move(0,5);
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::D) && characterSprite.getPosition().x < window.getSize().x - 16)
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::D) && character2.characterSprite.getPosition().x < window.getSize().x - 16)
             right = true;
-        if(!(sf::Keyboard::isKeyPressed(sf::Keyboard::D) && characterSprite.getPosition().x < window.getSize().x - 16))
+        if(!(sf::Keyboard::isKeyPressed(sf::Keyboard::D) && character2.characterSprite.getPosition().x < window.getSize().x - 16))
             right = false;
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::A) && characterSprite.getPosition().x > 0)
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::A) && character2.characterSprite.getPosition().x > 0)
             left = true;
-        if(!(sf::Keyboard::isKeyPressed(sf::Keyboard::A) && characterSprite.getPosition().x > 0))
+        if(!(sf::Keyboard::isKeyPressed(sf::Keyboard::A) && character2.characterSprite.getPosition().x > 0))
             left = false;
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && characterSprite.getPosition().x < window.getSize().x - 16)
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && character2.characterSprite.getPosition().x < window.getSize().x - 16)
             up = true;
-        if(!(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && characterSprite.getPosition().x < window.getSize().x - 16))
+        if(!(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && character2.characterSprite.getPosition().x < window.getSize().x - 16))
             up = false;
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::S) && characterSprite.getPosition().x > 0)
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::S) && character2.characterSprite.getPosition().x > 0)
             down = true;
-        if(!(sf::Keyboard::isKeyPressed(sf::Keyboard::S) && characterSprite.getPosition().x > 0))
+        if(!(sf::Keyboard::isKeyPressed(sf::Keyboard::S) && character2.characterSprite.getPosition().x > 0))
             down = false;
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+            character2.projectiles.push_back(new Projectile("Chuj", sf::Vector2f(50,50), sf::Vector2f(-0.1,0)));
         character2.updateMovement(up, down, right, left);
         character2.characterSprite.move(character2.velocity);
         character2.updatePosition(1,1,1,1);
+        for(auto i : character2.projectiles){
+            ;
+
+            fmt::println("{}, {}", i->position.x, i->position.y);
+        }
         for(int i = 0; i < world.tiles.size(); i++){
             for(int j = 0; j < world.tiles[i].size(); j++){
                 character2.collide(world.tiles[i][j]);
@@ -90,8 +97,10 @@ int main() {
             for(auto & i : world.tiles){
                 for(auto j : i){
                     window.draw(j->sprite);
-
                 }
+            }
+            for(auto i : character2.projectiles){
+                window.draw(i->circle);
             }
         window.draw(character2.characterSprite);
 
