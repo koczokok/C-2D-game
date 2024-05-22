@@ -9,7 +9,8 @@ int main() {
    auto world = World();
 
 
-
+    auto view = sf::View();
+    view.reset(sf::FloatRect(0, 0, 400, 240));
     auto window = sf::RenderWindow(
             sf::VideoMode({400,240}), "Test",
             sf::Style::Default, sf::ContextSettings(0,0,8)
@@ -28,7 +29,7 @@ int main() {
 
     //Enemy
     auto enemies = std::vector<Character *>();
-    enemies.push_back(new Character("dem.png",sf::Vector2f(0,18), sf::Vector2f(100,100), sf::Vector2f (16,16), sf::Vector2f(0,0), 5.f));
+    enemies.push_back(new Character("dem.png",sf::Vector2f(0,18), sf::Vector2f(100,100), sf::Vector2f (16,16), sf::Vector2f(0,0), 40.f));
 
     bool left, right, up, down;
     while(window.isOpen()){
@@ -59,6 +60,9 @@ int main() {
         else
             down = false;
         player.shootTimer++;
+        for(auto e : enemies){
+            e->shootTimer++;
+        }
         if(player.shootTimer > 10) {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
                 player.projectiles.push_back(new Projectile("Chuj", player.characterSprite.getPosition(),
@@ -85,15 +89,30 @@ int main() {
                 player.shootTimer = 0;
             }
         }
+
+        // Enemies shooting
+        for(auto e : enemies){
+            if(e->shootTimer > 40){
+                auto velx = player.characterSprite.getPosition().x - e->characterSprite.getPosition().x;
+                auto vely = player.characterSprite.getPosition().y - e->characterSprite.getPosition().y;
+                e->projectiles.push_back(new Projectile("Chuk", e->characterSprite.getPosition(),sf::Vector2f(velx/40, vely/40) ));
+                e->shootTimer = 0;
+            }
+        }
+
+
         //Moving objects
         player.updateMovement(up, down, right, left);
         for(auto i : player.projectiles){
             i->circle.move(i->velocity);
         }
+
         for(auto e : enemies){
             auto velx = player.characterSprite.getPosition().x - e->characterSprite.getPosition().x;
             auto vely = player.characterSprite.getPosition().y - e->characterSprite.getPosition().y;
             e->characterSprite.move(velx/40,vely/40);
+            for(auto p : e->projectiles)
+                p->circle.move(p->velocity);
         }
 
         //Collisions
@@ -116,7 +135,7 @@ int main() {
                 player.checkProjectileCollisions(world.tiles[i][j]);
             }
         }
-
+        window.setView(view);
         window.clear();
         window.draw(backgroundSprite);
         //Drawing tiles
@@ -129,8 +148,12 @@ int main() {
         for(auto i : player.projectiles){
             window.draw(i->circle);
         }
-        for(auto e : enemies)
+        for(auto e : enemies) {
             window.draw(e->characterSprite);
+            for(auto p : e->projectiles)
+                window.draw(p->circle);
+        }
+        view.move(sf::Vector2f(5,0));
 
         window.draw(player.characterSprite);
         window.display();
