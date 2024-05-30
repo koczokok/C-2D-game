@@ -31,6 +31,20 @@ add_executable(PJC_Game main.cpp
         character.cpp
         projectile.h
         projectile.cpp
+        Game.h
+        Game.cpp
+        Enemy/enemy.cpp
+        Enemy/enemy.h
+        Enemy/Casual.cpp
+        Enemy/Casual.h
+        Enemy/Speedy.cpp
+        Enemy/Speedy.h
+        Enemy/Fatman.cpp
+        Enemy/Fatman.h
+        Enemy/Boss.cpp
+        Enemy/Boss.h
+        Room/Room.cpp
+        Room/Room.h
 )
 
 target_link_libraries(PJC_Game sfml-graphics)

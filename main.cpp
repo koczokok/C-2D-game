@@ -3,12 +3,13 @@
 #include "fmt/core.h"
 #include "world.h"
 #include "character.h"
+#include "Enemy/enemy.h"
+#include "Enemy/Casual.h"
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 int main() {
    auto world = World();
-
-
+    auto shootTimer = 0;
     auto view = sf::View();
     view.reset(sf::FloatRect(0, 0, 400, 240));
     auto window = sf::RenderWindow(
@@ -19,17 +20,16 @@ int main() {
 
     // Background
     sf::Texture background;
-    if(!background.loadFromFile("C:\\Users\\pkury\\CLionProjects\\PJC-Game\\0.png")){
+    if(!background.loadFromFile("C:\\Users\\pkury\\CLionProjects\\PJC-Game\\resources\\0.png")){
         return EXIT_FAILURE;
     }
     sf::Sprite backgroundSprite(background);
-
     // Player
-    auto player = Character("dem.png",sf::Vector2f(0,0), sf::Vector2f(50,50), sf::Vector2f (16,16), sf::Vector2f(0,0), 20.f);
+    auto player = Character("dem.png",sf::Vector2f(0,0), sf::Vector2f(200,440), sf::Vector2f (16,16), sf::Vector2f(0,0), 20.f, 5);
 
     //Enemy
-    auto enemies = std::vector<Character *>();
-    enemies.push_back(new Character("dem.png",sf::Vector2f(0,18), sf::Vector2f(100,100), sf::Vector2f (16,16), sf::Vector2f(0,0), 40.f));
+
+
 
     bool left, right, up, down;
     while(window.isOpen()){
@@ -60,9 +60,9 @@ int main() {
         else
             down = false;
         player.shootTimer++;
-        for(auto e : enemies){
-            e->shootTimer++;
-        }
+//        for(auto e : enemies){
+//            e->shootTimer++;
+//        }
         if(player.shootTimer > 10) {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
                 player.projectiles.push_back(new Projectile("Chuj", player.characterSprite.getPosition(),
@@ -90,70 +90,77 @@ int main() {
             }
         }
 
-        // Enemies shooting
-        for(auto e : enemies){
-            if(e->shootTimer > 40){
-                auto velx = player.characterSprite.getPosition().x - e->characterSprite.getPosition().x;
-                auto vely = player.characterSprite.getPosition().y - e->characterSprite.getPosition().y;
-                e->projectiles.push_back(new Projectile("Chuk", e->characterSprite.getPosition(),sf::Vector2f(velx/40, vely/40) ));
-                e->shootTimer = 0;
-            }
-        }
 
+        player.updateMovement(up, down, right, left);
+        view.setCenter(player.characterSprite.getPosition());
 
         //Moving objects
-        player.updateMovement(up, down, right, left);
-        for(auto i : player.projectiles){
-            i->circle.move(i->velocity);
+
+
+        player.movePlayerProjectiles();
+
+
+       world.checkPlayerHit(player);
+
+        if(player.hearts < 0){
+            fmt::println("{}", "dead");
+            window.close();
         }
-
-        for(auto e : enemies){
-            auto velx = player.characterSprite.getPosition().x - e->characterSprite.getPosition().x;
-            auto vely = player.characterSprite.getPosition().y - e->characterSprite.getPosition().y;
-            e->characterSprite.move(velx/40,vely/40);
-            for(auto p : e->projectiles)
-                p->circle.move(p->velocity);
-        }
-
-        //Collisions
-        for(auto p : player.projectiles){
-            for(auto e : enemies){
-                if(p->circle.getGlobalBounds().intersects(e->characterSprite.getGlobalBounds())){
-                    fmt::println("{}", "Dead");
-                    auto iter = std::ranges::find(enemies.begin(), enemies.end(), e);
-                    enemies.erase(iter);
-                    auto iter1 = std::ranges::find(player.projectiles, p);
-                    player.projectiles.erase(iter1);
-                }
-
-            }
-
-        }
-        for(int i = 0; i < world.tiles.size(); i++){
-            for(int j = 0; j < world.tiles[i].size(); j++){
-                player.collide(world.tiles[i][j]);
-                player.checkProjectileCollisions(world.tiles[i][j]);
+        for(auto  const& tile : world.tiles){
+            for(auto  const& j : tile){
+                window.draw(j->sprite);
+                player.collide(j);
+                player.checkProjectileCollisions(j);
             }
         }
         window.setView(view);
         window.clear();
         window.draw(backgroundSprite);
         //Drawing tiles
-        for(auto & i : world.tiles){
-            for(auto j : i){
-                window.draw(j->sprite);
-            }
-        }
+        world.checkEnemyCollisions();
         //Drawing projectiles
-        for(auto i : player.projectiles){
+        for(auto const& i : player.projectiles){
+
             window.draw(i->circle);
         }
-        for(auto e : enemies) {
-            window.draw(e->characterSprite);
-            for(auto p : e->projectiles)
-                window.draw(p->circle);
+        world.checkEnemyCollisionProjectile(player);
+
+
+        for(auto& r : world.rooms){
+
+            if(r->enemies.size() > 0){
+                for(auto& e : r->enemies){
+                    if(r->isActive) {
+                        window.draw(e->characterSprite);
+                        e->move();
+                }
+            }}
         }
-        view.move(sf::Vector2f(5,0));
+        for(auto& r : world.rooms){
+            if(r->bounds.intersects(player.characterSprite.getGlobalBounds()) && !r->enemies.empty()){
+                r->isActive = true;
+                for(auto t : r->exits){
+                    t->isPassable= false;
+                }
+            }else if(r->enemies.empty())
+                r->deactive();
+        }
+        shootTimer++;
+        if(shootTimer > 40){
+
+            for(auto const& r : world.rooms){
+                if(r->isActive) {
+                    for (auto &e: r->enemies) {
+                        world.projectiles.push_back(e->shoot(""));
+                        shootTimer = 0;
+                    }
+                }
+            }
+        }
+        for(auto const& p : world.projectiles){
+            window.draw(p->circle);
+            p->circle.move(p->velocity);
+        }
 
         window.draw(player.characterSprite);
         window.display();

@@ -5,11 +5,10 @@
 #include "fmt/core.h"
 
 
-Tile::Tile(sf::Vector2i tPosition,const  sf::Texture& t, sf::Vector2f p, bool isPass, bool exit){
-    texturePos = tPosition;
-    texture = t;
+Tile::Tile(sf::Vector2i texturePos,std::string textureName, sf::Vector2f position, bool isPass, bool exit) :texturePos(texturePos), textureName(textureName), pos(position){
+
     scale = 1;
-    pos = p;
+
     sprite.setPosition(pos);
     isPassable = isPass;
     isExit = exit;
@@ -17,15 +16,21 @@ Tile::Tile(sf::Vector2i tPosition,const  sf::Texture& t, sf::Vector2f p, bool is
     right = sprite.getPosition().x + (sprite.getLocalBounds().width * scale);
     top = sprite.getPosition().y;
     bottom = sprite.getPosition().y + (sprite.getLocalBounds().height * scale);
-    createSprite();
+    createSprite(textureName);
 }
 
 
 
-bool Tile::createSprite() {
+bool Tile::createSprite(std::string textureName) {
+    if(!texture.loadFromFile("C:\\Users\\pkury\\CLionProjects\\PJC-Game\\resources\\" + textureName)){
+        return EXIT_FAILURE;
+    }
     sprite.setTexture(texture);
-    sprite.setTextureRect(sf::IntRect(texturePos.x *16,texturePos.y * 16,16,16));
-    fmt::println("{}, {}", "Worked2", isPassable);
+    if(textureName == "tileset.png"){
+        sprite.setTextureRect(sf::IntRect(texturePos.x *16,texturePos.y * 16,16,16));
+    }
+
+
     return 0;
 }
 

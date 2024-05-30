@@ -11,15 +11,19 @@
 class Character{
 public:
     sf::Texture characterTexture;
+    float shootTimer;
     sf::Sprite characterSprite;
     sf::Vector2f velocity;
-    float shootTimer;
+    bool isCollision;
     std::vector<Projectile *> projectiles;
     float bottom, left, right, up;
-    Character(std::string,sf::Vector2f, sf::Vector2f, sf::Vector2f, sf::Vector2f, float);
-    void collide(Tile * tile);
+    Character(const std::string&,sf::Vector2f, sf::Vector2f, sf::Vector2f, sf::Vector2f, float, int);
+    virtual bool collide(Tile * tile);
     void checkProjectileCollisions(Tile * tile);
-    void updateMovement(bool, bool, bool, bool);
+    bool checkDoors(std::vector<Tile*> tiles);
+    sf::Vector2f updateMovement(bool, bool, bool, bool);
+    int hearts;
+    void movePlayerProjectiles();
 
 };
 

@@ -89,6 +89,62 @@ build CMakeFiles/PJC_Game.dir/projectile.cpp.obj: CXX_COMPILER__PJC_Game_unscann
   OBJECT_DIR = CMakeFiles\PJC_Game.dir
   OBJECT_FILE_DIR = CMakeFiles\PJC_Game.dir
 
+build CMakeFiles/PJC_Game.dir/Game.cpp.obj: CXX_COMPILER__PJC_Game_unscanned_Debug C$:/Users/pkury/CLionProjects/PJC-Game/Game.cpp || cmake_object_order_depends_target_PJC_Game
+  DEFINES = -DSFML_STATIC
+  DEP_FILE = CMakeFiles\PJC_Game.dir\Game.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/pkury/CLionProjects/PJC-Game/cmake-build-debug/_deps/sfml-src/include -IC:/Users/pkury/CLionProjects/PJC-Game/cmake-build-debug/_deps/fmt-src/include
+  OBJECT_DIR = CMakeFiles\PJC_Game.dir
+  OBJECT_FILE_DIR = CMakeFiles\PJC_Game.dir
+
+build CMakeFiles/PJC_Game.dir/Enemy/enemy.cpp.obj: CXX_COMPILER__PJC_Game_unscanned_Debug C$:/Users/pkury/CLionProjects/PJC-Game/Enemy/enemy.cpp || cmake_object_order_depends_target_PJC_Game
+  DEFINES = -DSFML_STATIC
+  DEP_FILE = CMakeFiles\PJC_Game.dir\Enemy\enemy.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/pkury/CLionProjects/PJC-Game/cmake-build-debug/_deps/sfml-src/include -IC:/Users/pkury/CLionProjects/PJC-Game/cmake-build-debug/_deps/fmt-src/include
+  OBJECT_DIR = CMakeFiles\PJC_Game.dir
+  OBJECT_FILE_DIR = CMakeFiles\PJC_Game.dir\Enemy
+
+build CMakeFiles/PJC_Game.dir/Enemy/Casual.cpp.obj: CXX_COMPILER__PJC_Game_unscanned_Debug C$:/Users/pkury/CLionProjects/PJC-Game/Enemy/Casual.cpp || cmake_object_order_depends_target_PJC_Game
+  DEFINES = -DSFML_STATIC
+  DEP_FILE = CMakeFiles\PJC_Game.dir\Enemy\Casual.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/pkury/CLionProjects/PJC-Game/cmake-build-debug/_deps/sfml-src/include -IC:/Users/pkury/CLionProjects/PJC-Game/cmake-build-debug/_deps/fmt-src/include
+  OBJECT_DIR = CMakeFiles\PJC_Game.dir
+  OBJECT_FILE_DIR = CMakeFiles\PJC_Game.dir\Enemy
+
+build CMakeFiles/PJC_Game.dir/Enemy/Speedy.cpp.obj: CXX_COMPILER__PJC_Game_unscanned_Debug C$:/Users/pkury/CLionProjects/PJC-Game/Enemy/Speedy.cpp || cmake_object_order_depends_target_PJC_Game
+  DEFINES = -DSFML_STATIC
+  DEP_FILE = CMakeFiles\PJC_Game.dir\Enemy\Speedy.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/pkury/CLionProjects/PJC-Game/cmake-build-debug/_deps/sfml-src/include -IC:/Users/pkury/CLionProjects/PJC-Game/cmake-build-debug/_deps/fmt-src/include
+  OBJECT_DIR = CMakeFiles\PJC_Game.dir
+  OBJECT_FILE_DIR = CMakeFiles\PJC_Game.dir\Enemy
+
+build CMakeFiles/PJC_Game.dir/Enemy/Fatman.cpp.obj: CXX_COMPILER__PJC_Game_unscanned_Debug C$:/Users/pkury/CLionProjects/PJC-Game/Enemy/Fatman.cpp || cmake_object_order_depends_target_PJC_Game
+  DEFINES = -DSFML_STATIC
+  DEP_FILE = CMakeFiles\PJC_Game.dir\Enemy\Fatman.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/pkury/CLionProjects/PJC-Game/cmake-build-debug/_deps/sfml-src/include -IC:/Users/pkury/CLionProjects/PJC-Game/cmake-build-debug/_deps/fmt-src/include
+  OBJECT_DIR = CMakeFiles\PJC_Game.dir
+  OBJECT_FILE_DIR = CMakeFiles\PJC_Game.dir\Enemy
+
+build CMakeFiles/PJC_Game.dir/Enemy/Boss.cpp.obj: CXX_COMPILER__PJC_Game_unscanned_Debug C$:/Users/pkury/CLionProjects/PJC-Game/Enemy/Boss.cpp || cmake_object_order_depends_target_PJC_Game
+  DEFINES = -DSFML_STATIC
+  DEP_FILE = CMakeFiles\PJC_Game.dir\Enemy\Boss.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/pkury/CLionProjects/PJC-Game/cmake-build-debug/_deps/sfml-src/include -IC:/Users/pkury/CLionProjects/PJC-Game/cmake-build-debug/_deps/fmt-src/include
+  OBJECT_DIR = CMakeFiles\PJC_Game.dir
+  OBJECT_FILE_DIR = CMakeFiles\PJC_Game.dir\Enemy
+
+build CMakeFiles/PJC_Game.dir/Room/Room.cpp.obj: CXX_COMPILER__PJC_Game_unscanned_Debug C$:/Users/pkury/CLionProjects/PJC-Game/Room/Room.cpp || cmake_object_order_depends_target_PJC_Game
+  DEFINES = -DSFML_STATIC
+  DEP_FILE = CMakeFiles\PJC_Game.dir\Room\Room.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/pkury/CLionProjects/PJC-Game/cmake-build-debug/_deps/sfml-src/include -IC:/Users/pkury/CLionProjects/PJC-Game/cmake-build-debug/_deps/fmt-src/include
+  OBJECT_DIR = CMakeFiles\PJC_Game.dir
+  OBJECT_FILE_DIR = CMakeFiles\PJC_Game.dir\Room
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target PJC_Game
@@ -97,7 +153,7 @@ build CMakeFiles/PJC_Game.dir/projectile.cpp.obj: CXX_COMPILER__PJC_Game_unscann
 #############################################
 # Link the executable PJC_Game.exe
 
-build PJC_Game.exe: CXX_EXECUTABLE_LINKER__PJC_Game_Debug CMakeFiles/PJC_Game.dir/main.cpp.obj CMakeFiles/PJC_Game.dir/tile.cpp.obj CMakeFiles/PJC_Game.dir/world.cpp.obj CMakeFiles/PJC_Game.dir/character.cpp.obj CMakeFiles/PJC_Game.dir/projectile.cpp.obj | _deps/sfml-build/lib/libsfml-graphics-s-d.a _deps/fmt-build/libfmtd.a _deps/sfml-build/lib/libsfml-window-s-d.a _deps/sfml-build/lib/libsfml-system-s-d.a _deps/sfml-src/extlibs/libs-mingw/x64/libfreetype.a || _deps/fmt-build/libfmtd.a _deps/sfml-build/lib/libsfml-graphics-s-d.a _deps/sfml-build/lib/libsfml-system-s-d.a _deps/sfml-build/lib/libsfml-window-s-d.a
+build PJC_Game.exe: CXX_EXECUTABLE_LINKER__PJC_Game_Debug CMakeFiles/PJC_Game.dir/main.cpp.obj CMakeFiles/PJC_Game.dir/tile.cpp.obj CMakeFiles/PJC_Game.dir/world.cpp.obj CMakeFiles/PJC_Game.dir/character.cpp.obj CMakeFiles/PJC_Game.dir/projectile.cpp.obj CMakeFiles/PJC_Game.dir/Game.cpp.obj CMakeFiles/PJC_Game.dir/Enemy/enemy.cpp.obj CMakeFiles/PJC_Game.dir/Enemy/Casual.cpp.obj CMakeFiles/PJC_Game.dir/Enemy/Speedy.cpp.obj CMakeFiles/PJC_Game.dir/Enemy/Fatman.cpp.obj CMakeFiles/PJC_Game.dir/Enemy/Boss.cpp.obj CMakeFiles/PJC_Game.dir/Room/Room.cpp.obj | _deps/sfml-build/lib/libsfml-graphics-s-d.a _deps/fmt-build/libfmtd.a _deps/sfml-build/lib/libsfml-window-s-d.a _deps/sfml-build/lib/libsfml-system-s-d.a _deps/sfml-src/extlibs/libs-mingw/x64/libfreetype.a || _deps/fmt-build/libfmtd.a _deps/sfml-build/lib/libsfml-graphics-s-d.a _deps/sfml-build/lib/libsfml-system-s-d.a _deps/sfml-build/lib/libsfml-window-s-d.a
   FLAGS = -g
   LINK_LIBRARIES = _deps/sfml-build/lib/libsfml-graphics-s-d.a  _deps/fmt-build/libfmtd.a  _deps/sfml-build/lib/libsfml-window-s-d.a  _deps/sfml-build/lib/libsfml-system-s-d.a  -lopengl32  -lwinmm  -lgdi32  _deps/sfml-src/extlibs/libs-mingw/x64/libfreetype.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\PJC_Game.dir

@@ -4,29 +4,27 @@
 #include "character.h"
 #include "tile.h"
 #include <fmt/core.h>
+#include <algorithm>
 
-Character::Character(std::string textureName, sf::Vector2f texturePos, sf::Vector2f position, sf::Vector2f size, sf::Vector2f v, float shootTimer) {
-    if(!characterTexture.loadFromFile("../" + textureName)){
+Character::Character(const std::string& textureName, sf::Vector2f texturePos, sf::Vector2f position, sf::Vector2f size, sf::Vector2f v, float shootTimer, int hearts) : hearts(hearts),velocity(v), isCollision(false),shootTimer(shootTimer) {
+    if(!characterTexture.loadFromFile("../resources/" + textureName)){
         fmt::println("{}", "I'm fuckeed");
     }
-    this->shootTimer = shootTimer;
     characterSprite.setTexture(characterTexture);
     characterSprite.setTextureRect(sf::IntRect(texturePos.x,texturePos.y,16,16));
     characterSprite.setPosition(position.x,position.y);
     projectiles = std::vector<Projectile *>();
-    velocity = v;
 }
 
 
-void Character::collide(Tile * tile ) {
+bool Character::collide(Tile * tile) {
     auto playerBound = characterSprite.getGlobalBounds();
     auto nextPos = characterSprite.getGlobalBounds();
     auto tileBounds = tile->sprite.getGlobalBounds();
     nextPos.top += velocity.y;
     nextPos.left += velocity.x;
     if(tileBounds.intersects(nextPos) && !tile->isPassable){
-        fmt::println("{}", "intersects");
-
+        isCollision = true;
         // Get the amount of overlap in each direction
         float overlapLeft = (playerBound.left + playerBound.width) - tileBounds.left;
         float overlapRight = (tileBounds.left + tileBounds.width) - playerBound.left;
@@ -43,12 +41,12 @@ void Character::collide(Tile * tile ) {
             if (overlapLeft < overlapRight) {
                 // Collision from the left
                 velocity.x = 0.f;
-                fmt::println("{}, Right {}, left: {}", "left", overlapRight, overlapLeft);
+
                 characterSprite.setPosition(tileBounds.left - playerBound.width, playerBound.top);
             } else {
                 // Collision from the right
                 velocity.x = 0.f;
-                fmt::println("{}", "right");
+
                 characterSprite.setPosition(tileBounds.left + tileBounds.width, playerBound.top);
             }
         } else {
@@ -56,21 +54,25 @@ void Character::collide(Tile * tile ) {
             if (overlapTop < overlapBottom) {
                 // Collision from the top
                 velocity.y = 0.f;
-                fmt::println("{}", "top");
+
                 characterSprite.setPosition(playerBound.left, tileBounds.top - playerBound.height);
             } else {
                 // Collision from the bottom
                 velocity.y = 0.f;
-                fmt::println("{}", "bottom");
+
                 characterSprite.setPosition(playerBound.left, tileBounds.top + tileBounds.height);
             }
         }
+        return true;
     }
+
+    return false;
+
 }
 
 
 
-void Character::updateMovement(bool up, bool down, bool right, bool left) {
+sf::Vector2f Character::updateMovement(bool up, bool down, bool right, bool left) {
     if(right){
         velocity.x = 5;
     }
@@ -90,6 +92,7 @@ void Character::updateMovement(bool up, bool down, bool right, bool left) {
         velocity.y = 0;
     }
     characterSprite.setPosition(characterSprite.getPosition().x + velocity.x, characterSprite.getPosition().y + velocity.y);
+    return {velocity.x, velocity.y};
 }
 
 
@@ -101,8 +104,27 @@ void Character::checkProjectileCollisions(Tile *tile) {
         if (tileBound.intersects(p ->circle.getGlobalBounds()) && !tile->isPassable) {
             auto iter = std::ranges::find(projectiles, p);
             projectiles.erase(iter);
-            fmt::println("{}", "Proj dead");
         }
     }
 }
 
+void Character::movePlayerProjectiles() {
+    for(auto i : projectiles){
+        i->circle.move(i->velocity);
+    }
+
+}
+
+//bool Character::checkDoors(std::vector<Tile*> tiles) {
+//    std::ranges::
+//    for(auto tile : tiles) {
+//        auto x = std::abs(tile->sprite.getPosition().x - characterSprite.getPosition().x);
+//        auto y = std::abs(tile->sprite.getPosition().y - characterSprite.getPosition().y);
+//        if (x <= 16 && y <= 16) {
+//            fmt::println("{}", "door");
+//           tile->isPassable = false;
+//        }
+//    }
+//    return false;
+//}
+//
