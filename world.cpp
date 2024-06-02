@@ -8,6 +8,8 @@
 #include "world.h"
 #include "fmt/core.h"
 #include "Enemy/Casual.h"
+#include "Enemy/Speedy.h"
+#include "Enemy/Fatman.h"
 
 World::World() {
     setUpInitialState();
@@ -42,6 +44,17 @@ void World::setUpInitialState() {
                                          e));
                         rooms.push_back(new Room(sf::FloatRect(corx*16,cory*16, 336,160), false));
                     }
+                    if( x =='c'){
+                        tempMap.push_back(
+                                new Tile(sf::Vector2i(0,0), "corridor.png",
+                                         sf::Vector2f(corx * 16, cory * 16), !p,
+                                         e));
+                    }
+                    if (x == 'v')
+                        tempMap.push_back(
+                                new Tile(sf::Vector2i(0,0), "Vcorridor.png",
+                                         sf::Vector2f(corx * 16, cory * 16), !p,
+                                         e));
 
                     if ((!isdigit(x) || !isdigit(y))) {
                         corx++;
@@ -76,15 +89,27 @@ void World::setUpInitialState() {
 }
 
 void World::setUpEnemies() {
-    rooms.at(4)->enemies.push_back(new Casual("dem.png",sf::Vector2f(0,18), sf::Vector2f(16*52,25*16), sf::Vector2f (16,16), sf::Vector2f(0,0.5), 40.f,
-                                               false));
-    rooms.at(4)->enemies.push_back(new Casual("dem.png",sf::Vector2f(0,18), sf::Vector2f(16*50,30*16), sf::Vector2f (16,16), sf::Vector2f(0,0.5), 40.f,
-                                              false));
-
-
+    rooms.at(4)->enemies.push_back(new Casual("dem.png",sf::Vector2f(0,16), sf::Vector2f(16*52,30*16), sf::Vector2f (16,16), sf::Vector2f(0,0.5), 40.f,
+                                              false,2));
+    rooms.at(4)->enemies.push_back(new Casual("dem.png",sf::Vector2f(0,16), sf::Vector2f(16*50,35*16), sf::Vector2f (16,16), sf::Vector2f(0,0.5), 40.f,
+                                              false,2));
+    rooms.at(1)->enemies.push_back(new Speedy("dem.png",sf::Vector2f(16,0), sf::Vector2f(16*48,7*16), sf::Vector2f (16,16), sf::Vector2f(0,3), 40.f,
+                                              false, 3));
+    rooms.at(1)->enemies.push_back(new Casual("dem.png",sf::Vector2f(0,16), sf::Vector2f(16*52,5*16), sf::Vector2f (16,16), sf::Vector2f(0,0.5), 40.f,
+                                              false,2));
+    rooms.at(1)->enemies.push_back(new Casual("dem.png",sf::Vector2f(0,16), sf::Vector2f(16*37,12*16), sf::Vector2f (16,16), sf::Vector2f(0,0.5), 40.f,
+                                              false,2));
+    rooms.at(1)->enemies.push_back(new Speedy("dem.png",sf::Vector2f(16,0), sf::Vector2f(16*40,9*16), sf::Vector2f (16,16), sf::Vector2f(0,3), 40.f,
+                                              false, 3));
+    rooms.at(2)->enemies.push_back(new Fatman("dem.png",sf::Vector2f(64,0), sf::Vector2f(16*85,5*16), sf::Vector2f (16,16), sf::Vector2f(0,3), 40.f,
+                                              false, 5));
+    rooms.at(2)->enemies.push_back(new Speedy("dem.png",sf::Vector2f(16,0), sf::Vector2f(16*67,9*16), sf::Vector2f (16,16), sf::Vector2f(0,3), 40.f,
+                                              false, 3));
+    rooms.at(2)->enemies.push_back(new Casual("dem.png",sf::Vector2f(0,16), sf::Vector2f(16*71,12*16), sf::Vector2f (16,16), sf::Vector2f(0,0.5), 40.f,
+                                              false,2));
 }
 
-void World::checkEnemyCollisions() {
+void World::checkEnemyCollisions(sf::Vector2f playerPos) {
     for(auto const& i : tiles ){
         for(auto const& t : i){
             chcekProjectileCollison(t);
@@ -94,14 +119,9 @@ void World::checkEnemyCollisions() {
                     auto nextPos = e->characterSprite.getGlobalBounds();
                     auto tileBounds = t->sprite.getGlobalBounds();
                     nextPos.top += e->velocity.y * 10;
-
-                    auto distanceToTileX = e->characterSprite.getPosition().x - t->sprite.getPosition().x;
-                    auto distanceToTileY = e->characterSprite.getPosition().y - t->sprite.getPosition().y;
                     nextPos.left += e->velocity.x * 10;
                     if(tileBounds.intersects(nextPos) && !t->isPassable){
-                        if(distanceToTileY < 20 and distanceToTileY < 40){
-                            e->velocity.y = - e->velocity.y;
-                        }
+                        e->collideEffect(t, playerPos);
 
 
                     }
@@ -119,18 +139,16 @@ void World::checkEnemyCollisionProjectile(Character& player) {
             for (auto const &e: r->enemies) {
 
                 if (e->characterSprite.getGlobalBounds().intersects(p->circle.getGlobalBounds())) {
-                    fmt::println("{}", "intersects");
-                    auto iter = std::ranges::find(r->enemies.begin(), r->enemies.end(), e);
-                    auto s = r->enemies.size();
-                    fmt::println("{}", r->enemies.size());
-                    r->enemies.erase(iter);
-                    if(s == r->enemies.size()) {
-                        fmt::println("{}", "something fucked");
-                        fmt::println("{}", r->enemies.size());
-                    }
-                    fmt::println("{}", r->enemies.size());
+                    e->hearts--;
                     auto iterProjectile = std::ranges::find(player.projectiles, p);
                     player.projectiles.erase(iterProjectile);
+                    if(e->hearts<=0) {
+                        fmt::println("{}", "intersects");
+                        auto iter = std::ranges::find(r->enemies.begin(), r->enemies.end(), e);
+                        r->enemies.erase(iter);
+                        shouldbrake = true;
+                        break;
+                    }
                     shouldbrake = true;
                     break;
                 }
@@ -158,6 +176,80 @@ void World::checkPlayerHit(Character & player) {
             projectiles.erase(std::ranges::find(projectiles, p));
             player.hearts--;
         }
+    }
+
+}
+
+void World::drawTiles(sf::RenderWindow& window, Character& player){
+    for (auto const &tile: tiles) {
+        for (auto const &j: tile) {
+            window.draw(j->sprite);
+            player.collide(j);
+            player.checkProjectileCollisions(j);
+        }
+    }
+}
+
+void World::drawRoomAndEnemies(sf::RenderWindow & window, Character & player) {
+    for (auto &r: rooms) {
+
+        if (r->enemies.size() > 0) {
+            for (auto &e: r->enemies) {
+                if (r->isActive) {
+                    for(auto & t : r->spikes){
+                        window.draw(t->sprite);
+                    }
+                    window.draw(e->characterSprite);
+                    e->move(player.characterSprite.getPosition());
+                }
+            }
+        }
+    }
+}
+
+void World::renderMain(sf::RenderWindow & window, Character & player, int& shootTimer) {
+    checkEnemyCollisions(player.characterSprite.getPosition());
+    checkPlayerHit(player);
+    checkEnemyCollisionProjectile(player);
+
+    drawTiles(window, player);
+    activateRoom(player, shootTimer);
+    drawEnemyProjectiles(window);
+    drawRoomAndEnemies(window, player);
+}
+
+void World::activateRoom(Character & player, int& shootTimer) {
+    for (auto &r: rooms) {
+        if (r->bounds.intersects(player.characterSprite.getGlobalBounds()) && !r->enemies.empty()) {
+            r->isActive = true;
+            for (auto t: r->exits) {
+                if (r->spikes.size() < r->exits.size()) {
+                    r->spikes.push_back(
+                            new Tile(sf::Vector2i(12, 2), "tileset.png", sf::Vector2f(t->pos.x, t->pos.y), 0, 0));
+                }
+                t->isPassable = false;
+            }
+        } else if (r->enemies.empty()) {
+            r->spikes.clear();
+            r->deactive();
+        }
+        if (shootTimer > 40) {
+            if (r->isActive) {
+                for (auto &e: r->enemies) {
+                    for(auto p : e->shoot("", player.characterSprite.getPosition())){
+                        projectiles.push_back(p);
+                    }
+                    shootTimer = 0;
+                }
+            }
+        }
+    }
+}
+
+void World::drawEnemyProjectiles(sf::RenderWindow & window) {
+    for (auto const &p: projectiles) {
+        window.draw(p->circle);
+        p->circle.move(p->velocity);
     }
 
 }

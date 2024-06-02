@@ -1,6 +1,7 @@
 //
 // Created by pkury on 20/05/2024.
 //
+#pragma once
 #include "Tile.h"
 #include <SFML/Graphics.hpp>
 #include <string>

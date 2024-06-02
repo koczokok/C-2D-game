@@ -1,8 +1,9 @@
 //
 // Created by pkury on 19/05/2024.
 //
-#include "character.h"
+#include "Character.h"
 #include "tile.h"
+#include "GameStates.h"
 #include <fmt/core.h>
 #include <algorithm>
 
@@ -74,16 +75,16 @@ bool Character::collide(Tile * tile) {
 
 sf::Vector2f Character::updateMovement(bool up, bool down, bool right, bool left) {
     if(right){
-        velocity.x = 5;
+        velocity.x = 3.5;
     }
     if(left){
-        velocity.x = -5;
+        velocity.x = -3.5;
     }
     if(up){
-        velocity.y = -5;
+        velocity.y = -3.5;
     }
     if(down){
-        velocity.y = 5;
+        velocity.y = 3.5;
     }
     if(!(right or left)){
         velocity.x = 0;
@@ -108,23 +109,25 @@ void Character::checkProjectileCollisions(Tile *tile) {
     }
 }
 
-void Character::movePlayerProjectiles() {
+void Character::moveAndDrawPlayerProjectiles(sf::RenderWindow& window) {
     for(auto i : projectiles){
+        window.draw(i->circle);
         i->circle.move(i->velocity);
     }
 
 }
 
-//bool Character::checkDoors(std::vector<Tile*> tiles) {
-//    std::ranges::
-//    for(auto tile : tiles) {
-//        auto x = std::abs(tile->sprite.getPosition().x - characterSprite.getPosition().x);
-//        auto y = std::abs(tile->sprite.getPosition().y - characterSprite.getPosition().y);
-//        if (x <= 16 && y <= 16) {
-//            fmt::println("{}", "door");
-//           tile->isPassable = false;
-//        }
-//    }
-//    return false;
-//}
-//
+void Character::checkIfPlayerAlive(Game& gameState) const {
+        if(hearts <= 0){
+            gameState.gameState = State::QUIT;
+        }
+}
+
+
+void Character::playerRender(sf::RenderWindow& window, Game& gameState ){
+    window.draw(characterSprite);
+    moveAndDrawPlayerProjectiles(window);
+    checkIfPlayerAlive(gameState);
+}
+
+

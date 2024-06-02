@@ -2,13 +2,13 @@
 // Created by pkury on 29/05/2024.
 //
 
-#include "enemy.h"
+#include "Enemy.h"
 #include "fmt/core.h"
 
 
-Enemy::Enemy(std::string textureName, sf::Vector2f texturePos, sf::Vector2f position, sf::Vector2f size, sf::Vector2f v, float shootTimer, bool isActive) : Character(
+Enemy::Enemy(std::string textureName, sf::Vector2f texturePos, sf::Vector2f position, sf::Vector2f size, sf::Vector2f v, float shootTimer, bool isActive, int hearts) : Character(
 
-        textureName, texturePos, position, size, v, shootTimer, 1), isActive(isActive){
+       textureName, texturePos, position, size, v, shootTimer, hearts), isActive(isActive){
 
 }
 
@@ -31,3 +31,16 @@ bool Enemy::collide(Tile *tile) {
 
     return false;
 }
+
+ void Enemy::move(sf::Vector2f playerPos) {
+    characterSprite.move(velocity);
+}
+
+std::vector<Projectile*>Enemy::shoot(const std::string &, sf::Vector2f playerPos) {
+    return std::vector<Projectile*>{nullptr};
+}
+
+void Enemy::collideEffect(Tile *tile, sf::Vector2f playerPos) {
+fmt::println("{}","fucke me");
+}
+
