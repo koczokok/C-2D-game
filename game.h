@@ -4,7 +4,7 @@
 
 
 #include "GameStates.h"
-#include "world.h"
+
 #ifndef PJC_GAME_GAME_H
 #define PJC_GAME_GAME_H
 
