@@ -3,15 +3,14 @@
 //
 
 
-#pragma once
+
+#ifndef PJC_GAME_CHARACTER_H
+#define PJC_GAME_CHARACTER_H
 #include <string>
 #include <SFML/Graphics.hpp>
 #include "tile.h"
 #include "projectile.h"
-#include "game.h"
-#ifndef PJC_GAME_CHARACTER_H
-#define PJC_GAME_CHARACTER_H
-
+class Game;
 class Character{
 public:
     sf::Texture characterTexture;
@@ -21,7 +20,7 @@ public:
     bool isCollision;
     std::vector<Projectile *> projectiles;
 
-    Character(const std::string&,sf::Vector2f, sf::Vector2f, sf::Vector2f, sf::Vector2f, float, int);
+    Character(const std::string &, sf::Vector2f, sf::Vector2f, sf::Vector2f, float, int);
     virtual bool collide(Tile * tile);
     void checkProjectileCollisions(Tile * tile);
 

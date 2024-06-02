@@ -8,10 +8,10 @@
 Speedy::Speedy(std::string textureName,
                sf::Vector2f texturePos,
                sf::Vector2f position,
-               sf::Vector2f size,
+
                sf::Vector2f v,
-               float shootTimer, bool isActive, int hearts) : Enemy
-                                           (textureName, texturePos, position, size, v, shootTimer, isActive, hearts) {
+               float shootTimer, bool isActive, int hearts, EnemyType e) : Enemy
+                                           (textureName, texturePos, position, v, shootTimer, isActive, hearts, e) {
 
 
 }
@@ -22,7 +22,7 @@ std::vector<Projectile*> Speedy::shoot(const std::string &, sf::Vector2f playerP
     auto sum = std::abs(distanceToPlayerY) + std::abs(distanceToPlayerX);
     auto sy = distanceToPlayerY / sum;
     auto sx = distanceToPlayerX / sum;
-    fmt::println("{}, {}", sy, sx);
+//    fmt::println("{}, {}", sy, sx);
     return std::vector<Projectile*>{ new Projectile("",characterSprite.getPosition(), sf::Vector2f (-sx * 2.5,-sy * 2.5))};
 
 }

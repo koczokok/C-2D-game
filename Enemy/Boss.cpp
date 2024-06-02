@@ -7,11 +7,11 @@
 Boss::Boss(std::string textureName,
            sf::Vector2f texturePos,
            sf::Vector2f position,
-           sf::Vector2f size,
+
            sf::Vector2f v,
-           float shootTimer, bool isActive, int hearts) : Enemy
-                                                      (textureName, texturePos, position, size, v, shootTimer,
-                                                       isActive, hearts) {
+           float shootTimer, bool isActive, int hearts, EnemyType e) : Enemy
+                                                      (textureName, texturePos, position, v, shootTimer,
+                                                       isActive, hearts, e) {
 
 
 }

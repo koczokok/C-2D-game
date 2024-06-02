@@ -2,9 +2,10 @@
 // Created by pkury on 18/05/2024.
 //
 
-#include <SFML/Graphics.hpp>
+
 #ifndef PJC_GAME_TILE_H
 #define PJC_GAME_TILE_H
+#include <SFML/Graphics.hpp>
 class Tile {
 public:
     bool isPassable;

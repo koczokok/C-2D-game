@@ -9,8 +9,7 @@
 #include <SFML/Window.hpp>
 int main() {
     auto game = Game();
-
-    auto world = World();
+    World world = World(false, false);
     auto shootTimer = 0;
 
     auto view = sf::View();
@@ -31,8 +30,7 @@ int main() {
     }
     sf::Sprite backgroundSprite(background);
     // Player
-    auto player = Character("dem.png", sf::Vector2f(0, 0), sf::Vector2f(200, 440), sf::Vector2f(16, 16),
-                            sf::Vector2f(0, 0), 20.f, 5);
+
 
     //Enemy
 
@@ -48,11 +46,15 @@ int main() {
         }
 
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-          menu.checkButtonClick(sf::Mouse::getPosition(window), game);
-          settings.checkButtonClick(sf::Mouse::getPosition(window), game);
+          menu.checkButtonClick(sf::Mouse::getPosition(window), game, world, player);
+          settings.checkButtonClick(sf::Mouse::getPosition(window), game, world, player);
+        }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt)){
+            game.loadSave("example.txt", world, player);
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
-           game.gameState = State::PAUSE;
+//           game.gameState = State::PAUSE;
+game.save(world, player);
         }
         //Keyboard events
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
@@ -104,7 +106,9 @@ int main() {
 
 
 
-
+//        for(auto r : world.rooms){
+//            fmt::println("{}", r->isActive);
+//        }
         //Moving objects
         if(game.gameState == State::QUIT){
             window.close();
@@ -135,6 +139,10 @@ int main() {
             world.renderMain(window, player, shootTimer);
             shootTimer++;
             player.playerRender(window, game);
+            for(auto s : world.rooms[4]->exits){
+                fmt::println("{} {}",s->pos.x, s->pos.y);
+
+            }
             window.display();
             continue;
         }

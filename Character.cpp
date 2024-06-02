@@ -6,8 +6,10 @@
 #include "GameStates.h"
 #include <fmt/core.h>
 #include <algorithm>
+#include "game.h"
 
-Character::Character(const std::string& textureName, sf::Vector2f texturePos, sf::Vector2f position, sf::Vector2f size, sf::Vector2f v, float shootTimer, int hearts) : hearts(hearts),velocity(v), isCollision(false),shootTimer(shootTimer) {
+Character::Character(const std::string &textureName, sf::Vector2f texturePos, sf::Vector2f position, sf::Vector2f v,
+                     float shootTimer, int hearts) : hearts(hearts),velocity(v), isCollision(false),shootTimer(shootTimer) {
     if(!characterTexture.loadFromFile("../resources/" + textureName)){
         fmt::println("{}", "I'm fuckeed");
     }

@@ -10,103 +10,119 @@
 #include "Enemy/Casual.h"
 #include "Enemy/Speedy.h"
 #include "Enemy/Fatman.h"
+#include "eType.h"
 
 World::World() {
-    setUpInitialState();
-    setUpEnemies();
+    setUpInitialState(true);
+    setUpEnemies(true);
+    player = new Character("dem.png", sf::Vector2f(0, 0), sf::Vector2f(200, 440),
+              sf::Vector2f(0, 0), 20.f, 5);
+    fmt::println("{}", "Random world created");
+}
+
+World::World(bool createRooms, bool createEnemies) {
+    setUpInitialState(createRooms);
+    setUpEnemies(createEnemies);
 }
 
 
 
-void World::setUpInitialState() {
+void World::setUpInitialState(bool createRooms) {
     tiles.clear();
     std::vector<Tile *> tempMap;
     std::ifstream openFile("../maps/text.txt");
     auto cory = 0;
     auto corx = 0;
     auto test = 0;
-    auto exits = std::vector<std::vector<Tile*>>(8, std::vector<Tile*>{});
-    if(openFile.is_open()){
-        while(!openFile.eof()){
+    auto exits = std::vector<std::vector<Tile *>>(8, std::vector<Tile *>{});
+    if (openFile.is_open()) {
+        while (!openFile.eof()) {
             std::string str, value;
             std::getline(openFile, str);
             std::stringstream stream(str);
 
-            while(std::getline(stream, value, '\t')) {
+            while (std::getline(stream, value, '\t')) {
 
-                    char x = value[0], y = value[2];
-                    int p = value[4] - '0', e = value[6] - '0';
+                char x = value[0], y = value[2];
+                int p = value[4] - '0', e = value[6] - '0';
 
-                    if (x == 'f'){
-                        tempMap.push_back(
-                                new Tile(sf::Vector2i(0,0), "RoomFloor.png",
-                                         sf::Vector2f(corx * 16, cory * 16), !p,
-                                         e));
-                        rooms.push_back(new Room(sf::FloatRect(corx*16,cory*16, 336,160), false));
+                if (x == 'f') {
+                    tempMap.push_back(
+                            new Tile(sf::Vector2i(0, 0), "RoomFloor.png",
+                                     sf::Vector2f(corx * 16, cory * 16), !p,
+                                     e));
+                    if (createRooms) {
+                        rooms.push_back(new Room(sf::FloatRect(corx * 16, cory * 16, 336, 160), false));
                     }
-                    if( x =='c'){
-                        tempMap.push_back(
-                                new Tile(sf::Vector2i(0,0), "corridor.png",
-                                         sf::Vector2f(corx * 16, cory * 16), !p,
-                                         e));
-                    }
-                    if (x == 'v')
-                        tempMap.push_back(
-                                new Tile(sf::Vector2i(0,0), "Vcorridor.png",
-                                         sf::Vector2f(corx * 16, cory * 16), !p,
-                                         e));
+                }
+                if (x == 'c') {
+                    tempMap.push_back(
+                            new Tile(sf::Vector2i(0, 0), "corridor.png",
+                                     sf::Vector2f(corx * 16, cory * 16), !p,
+                                     e));
+                }
+                if (x == 'v')
+                    tempMap.push_back(
+                            new Tile(sf::Vector2i(0, 0), "Vcorridor.png",
+                                     sf::Vector2f(corx * 16, cory * 16), !p,
+                                     e));
 
-                    if ((!isdigit(x) || !isdigit(y))) {
-                        corx++;
-                    }
-                    else {
-                        tempMap.push_back(
-                                new Tile(sf::Vector2i(x - '0', y - '0'), "tileset.png",
-                                         sf::Vector2f(corx * 16, cory * 16), !p,
-                                         e));
-                        corx++;
-                        test++;
-                    }
-                if(e > 0){
-                    exits.at(e -1).push_back(tempMap.back());
+                if ((!isdigit(x) || !isdigit(y))) {
+                    corx++;
+                } else {
+                    tempMap.push_back(
+                            new Tile(sf::Vector2i(x - '0', y - '0'), "tileset.png",
+                                     sf::Vector2f(corx * 16, cory * 16), !p,
+                                     e));
+                    corx++;
+                    test++;
+                }
+
+                if (e > 0 and createRooms) {
+                    exits.at(e - 1).push_back(tempMap.back());
                 }
 
             }
-                corx=0;
-                tiles.push_back(tempMap);
-                tempMap.clear();
-                cory++;
+            corx = 0;
+
+            tiles.push_back(tempMap);
+            tempMap.clear();
+            cory++;
+        }
+    }
+    if (createRooms) {
+        for (auto i = 0; i < rooms.size(); i++) {
+            for (auto t: exits[i]) {
+                rooms[i]->exits.push_back(t);
             }
         }
-
-    for(auto i=0; i < rooms.size(); i++){
-      for(auto t : exits[i]){
-          rooms[i]->exits.push_back(t);
-      }
     }
-
-
 }
 
-void World::setUpEnemies() {
-    rooms.at(4)->enemies.push_back(new Casual("dem.png",sf::Vector2f(0,16), sf::Vector2f(16*52,30*16), sf::Vector2f (16,16), sf::Vector2f(0,0.5), 40.f,
-                                              false,2));
-    rooms.at(4)->enemies.push_back(new Casual("dem.png",sf::Vector2f(0,16), sf::Vector2f(16*50,35*16), sf::Vector2f (16,16), sf::Vector2f(0,0.5), 40.f,
-                                              false,2));
-    rooms.at(1)->enemies.push_back(new Speedy("dem.png",sf::Vector2f(16,0), sf::Vector2f(16*48,7*16), sf::Vector2f (16,16), sf::Vector2f(0,3), 40.f,
-                                              false, 3));
-    rooms.at(1)->enemies.push_back(new Casual("dem.png",sf::Vector2f(0,16), sf::Vector2f(16*52,5*16), sf::Vector2f (16,16), sf::Vector2f(0,0.5), 40.f,
-                                              false,2));
-    rooms.at(1)->enemies.push_back(new Casual("dem.png",sf::Vector2f(0,16), sf::Vector2f(16*37,12*16), sf::Vector2f (16,16), sf::Vector2f(0,0.5), 40.f,
-                                              false,2));
-    rooms.at(1)->enemies.push_back(new Speedy("dem.png",sf::Vector2f(16,0), sf::Vector2f(16*40,9*16), sf::Vector2f (16,16), sf::Vector2f(0,3), 40.f,
-                                              false, 3));
-    rooms.at(2)->enemies.push_back(new Fatman("dem.png",sf::Vector2f(64,0), sf::Vector2f(16*85,5*16), sf::Vector2f (16,16), sf::Vector2f(0,3), 40.f,
-                                              false, 5));
-    rooms.at(2)->enemies.push_back(new Speedy("dem.png",sf::Vector2f(16,0), sf::Vector2f(16*67,9*16), sf::Vector2f (16,16), sf::Vector2f(0,3), 40.f,
-                                              false, 3));
-    rooms.at(2)->enemies.push_back(new Casual("dem.png",sf::Vector2f(0,16), sf::Vector2f(16*71,12*16), sf::Vector2f (16,16), sf::Vector2f(0,0.5), 40.f,
-                                              false,2));
+
+
+
+void World::setUpEnemies(bool is) {
+    if(is){
+    rooms.at(4)->enemies.push_back(new Casual("dem.png",sf::Vector2f(0,16), sf::Vector2f(16*52,30*16), sf::Vector2f(0,0.5), 40.f,
+                                              false,2, EnemyType::CASUAL));
+    rooms.at(4)->enemies.push_back(new Casual("dem.png",sf::Vector2f(0,16), sf::Vector2f(16*50,35*16), sf::Vector2f(0,0.5), 40.f,
+                                              false,2, EnemyType::SPEEDY));
+//    rooms.at(1)->enemies.push_back(new Speedy("dem.png",sf::Vector2f(16,0), sf::Vector2f(16*48,7*16), sf::Vector2f(0,3), 40.f,
+//                                              false, 3));
+//    rooms.at(1)->enemies.push_back(new Casual("dem.png",sf::Vector2f(0,16), sf::Vector2f(16*52,5*16), sf::Vector2f(0,0.5), 40.f,
+//                                              false,2));
+//    rooms.at(1)->enemies.push_back(new Casual("dem.png",sf::Vector2f(0,16), sf::Vector2f(16*37,12*16), sf::Vector2f(0,0.5), 40.f,
+//                                              false,2));
+//    rooms.at(1)->enemies.push_back(new Speedy("dem.png",sf::Vector2f(16,0), sf::Vector2f(16*40,9*16), sf::Vector2f(0,3), 40.f,
+//                                              false, 3));
+//    rooms.at(2)->enemies.push_back(new Fatman("dem.png",sf::Vector2f(64,0), sf::Vector2f(16*85,5*16), sf::Vector2f(0,3), 40.f,
+//                                              false, 5));
+//    rooms.at(2)->enemies.push_back(new Speedy("dem.png",sf::Vector2f(16,0), sf::Vector2f(16*67,9*16), sf::Vector2f(0,3), 40.f,
+//                                              false, 3));
+//    rooms.at(2)->enemies.push_back(new Casual("dem.png",sf::Vector2f(0,16), sf::Vector2f(16*71,12*16), sf::Vector2f(0,0.5), 40.f,
+//                                              false,2));
+    }
 }
 
 void World::checkEnemyCollisions(sf::Vector2f playerPos) {

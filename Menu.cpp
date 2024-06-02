@@ -4,6 +4,7 @@
 
 #include "Menu.h"
 #include "fmt/core.h"
+#include "world.h"
 
 
 Menu::Menu(sf::Font& font ,sf::Vector2f size, sf::Vector2f initialPos, int margin, int numberOfButtons, std::vector<std::string> buttonNames) : texture(new sf::Texture()){
@@ -64,14 +65,21 @@ void Menu::makeTexts(sf::Font& font, std::vector<std::string> strings) {
 
 
 
-void Menu::checkButtonClick(sf::Vector2i vector, Game& game) {
+void Menu::checkButtonClick(sf::Vector2i vector, Game& game, World& world, Character& player) {
+
         for(auto i = 0; i < buttons.size(); i++){
             if(buttons[i].getGlobalBounds().contains(vector.x, vector.y)){
                 auto text = buttonTexts[i].getString();
-                if(text == "New Game")
+                if(text == "New Game") {
+                    world = World();
                     game.gameState = State::GAME;
-                if(text == "Load from save")
+                }
+                if(text == "Load from save") {
+                    world = World(false, false);
+                    game.loadSave("example.txt", world, player);
                     game.gameState = State::GAME;
+
+                }
                 if(text == "Quit")
                     game.gameState = State::QUIT;
                 if(text == "Resume")

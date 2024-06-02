@@ -48,8 +48,7 @@ add_executable(PJC_Game main.cpp
         GameStates.h
         game.cpp
         game.h
-        save.cpp
-        save.h
+        eType.h
 )
 
 target_link_libraries(PJC_Game sfml-graphics)

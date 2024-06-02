@@ -6,9 +6,9 @@
 #include "fmt/core.h"
 
 
-Enemy::Enemy(std::string textureName, sf::Vector2f texturePos, sf::Vector2f position, sf::Vector2f size, sf::Vector2f v, float shootTimer, bool isActive, int hearts) : Character(
+Enemy::Enemy(std::string textureName, sf::Vector2f texturePos, sf::Vector2f position, sf::Vector2f v, float shootTimer, bool isActive, int hearts, EnemyType e) : Character(
 
-       textureName, texturePos, position, size, v, shootTimer, hearts), isActive(isActive){
+        textureName, texturePos, position, v, shootTimer, hearts), isActive(isActive), enemyType(e){
 
 }
 
