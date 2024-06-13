@@ -10,8 +10,9 @@
 
 class Enemy : public Character {
 public:
-    Enemy(std::string,sf::Vector2f, sf::Vector2f, sf::Vector2f, float, bool, int, EnemyType);
+    Enemy(std::string, sf::Vector2f, sf::Vector2f, sf::Vector2f, int shootTimer, bool, int, EnemyType, sf::Vector2f);
     bool isActive;
+    sf::Vector2f projectileSpeed;
     EnemyType enemyType;
     bool collide(Tile * tile);
     virtual void collideEffect(Tile *, sf::Vector2f);

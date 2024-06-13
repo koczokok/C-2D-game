@@ -8,10 +8,10 @@
 #include <algorithm>
 #include "game.h"
 
-Character::Character(const std::string &textureName, sf::Vector2f texturePos, sf::Vector2f position, sf::Vector2f v,
-                     float shootTimer, int hearts) : hearts(hearts),velocity(v), isCollision(false),shootTimer(shootTimer) {
-    if(!characterTexture.loadFromFile("../resources/" + textureName)){
-        fmt::println("{}", "I'm fuckeed");
+Character::Character(const std::string& textureName, sf::Vector2f texturePos, sf::Vector2f position, sf::Vector2f v,
+                     int shootTimer, int hearts)
+        : hearts(hearts), velocity(v), isCollision(false), shootTimer(shootTimer) {
+    if(!characterTexture.loadFromFile("../resources/" + textureName)) {
     }
     characterSprite.setTexture(characterTexture);
     characterSprite.setTextureRect(sf::IntRect(texturePos.x,texturePos.y,16,16));
@@ -77,16 +77,16 @@ bool Character::collide(Tile * tile) {
 
 sf::Vector2f Character::updateMovement(bool up, bool down, bool right, bool left) {
     if(right){
-        velocity.x = 3.5;
+        velocity.x = 5;
     }
     if(left){
-        velocity.x = -3.5;
+        velocity.x = -5;
     }
     if(up){
-        velocity.y = -3.5;
+        velocity.y = -5;
     }
     if(down){
-        velocity.y = 3.5;
+        velocity.y = 5;
     }
     if(!(right or left)){
         velocity.x = 0;

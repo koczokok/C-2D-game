@@ -12,13 +12,20 @@
 #include "Enemy/Boss.h"
 
 Game::Game() {
+    // Final
     gameState = State::MENU;
+
+
+
+//Test
+//  gameState = State::GAME;
 }
 
 
-void Game::save(World & world, Character & character) {
+void Game::save(World & world, std::string filename) {
     namespace sf = std::filesystem;
-   std::ofstream outFile("example.txt");
+//   std::ofstream outFile("./saves/" + filename);
+    std::ofstream outFile("./saves/" + filename);
     if (outFile.is_open()) {
         for(auto r : world.rooms){
             outFile << "R \n";
@@ -29,6 +36,7 @@ void Game::save(World & world, Character & character) {
             outFile << makeString(r->isActive);
             outFile << "\n";
             for(auto  e : r->enemies){
+
                 outFile << "Enemy \n";
                 outFile << makeString(e->enemyType)+ "\t";
                 outFile << makeString(e->isActive) + "\t" ;
@@ -39,7 +47,9 @@ void Game::save(World & world, Character & character) {
                 outFile << makeString(e->characterSprite.getPosition().x) + "\t" ;
                 outFile << makeString(e->characterSprite.getPosition().y) + "\t" ;
                 outFile << makeString(e->characterSprite.getTextureRect().getPosition().x) + "\t";
-                outFile << makeString(e->characterSprite.getTextureRect().getPosition().y);
+                outFile << makeString(e->characterSprite.getTextureRect().getPosition().y) + "\t";
+               outFile << makeString(e->projectileSpeed.x) + "\t";
+               outFile << makeString(e->projectileSpeed.y);
                 outFile << "\n";
             }
             for(auto e : r->exits){
@@ -64,14 +74,14 @@ void Game::save(World & world, Character & character) {
             }
         }
         outFile << "Player \n";
-        outFile << makeString(character.velocity.x) + "\t";
-        outFile << makeString(character.velocity.y) + "\t";
-        outFile << makeString(character.hearts) + "\t";
-        outFile << makeString(character.shootTimer) + "\t";
-        outFile << makeString(character.characterSprite.getPosition().x) + "\t";
-        outFile << makeString(character.characterSprite.getPosition().y) + "\t";
-        outFile << makeString(character.characterSprite.getTextureRect().getPosition().x) + "\t";
-        outFile << makeString(character.characterSprite.getTextureRect().getPosition().y) + "\t";
+        outFile << makeString(world.player->velocity.x) + "\t";
+        outFile << makeString(world.player->velocity.y) + "\t";
+        outFile << makeString(world.player->hearts) + "\t";
+        outFile << makeString(world.player->shootTimer) + "\t";
+        outFile << makeString(world.player->characterSprite.getPosition().x) + "\t";
+        outFile << makeString(world.player->characterSprite.getPosition().y) + "\t";
+        outFile << makeString(world.player->characterSprite.getTextureRect().getPosition().x) + "\t";
+        outFile << makeString(world.player->characterSprite.getTextureRect().getPosition().y) + "\t";
         // Write data to the file
 
 
@@ -91,7 +101,7 @@ std::string Game::makeString(auto s){
 }
 
 
-void Game::loadSave(std::string path, World& world, Character& player){
+void Game::loadSave(std::string path, World& world){
 
 
     std::ifstream inputFile(path);
@@ -115,9 +125,11 @@ void Game::loadSave(std::string path, World& world, Character& player){
                 Tile* tile = createTile(line);
                 for(auto i : world.tiles){
                     for(auto t : i){
-//                        std::ranges::find(i,tile)
+//
                         if(t->pos == tile->pos){
-                            t->isPassable = false;
+                            if(world.rooms.back()->isActive){
+                                t->isPassable = false;
+                            }
                             world.rooms.back()->exits.push_back(t);
                         }
 
@@ -137,7 +149,7 @@ void Game::loadSave(std::string path, World& world, Character& player){
         }
         inputFile.close();
     }
-
+        gameState = State::GAME;
 }
 
 Room* Game::createRoom(std::string data){
@@ -166,21 +178,23 @@ Enemy* Game::createEnemy(std::string data){
 
 
         bool isActive;
-        int  hearts, eType;
-        float vx, vy, px, py, tx,ty, shootTimer;
+        int  hearts, eType ,shootTimer;
+        float vx, vy, px, py, tx,ty, psx, psy;
 
-        ss  >> eType >> isActive >> shootTimer >> hearts >> vx >> vy >> px >> py >> tx >> ty;
+
+        ss  >> eType >> isActive >> shootTimer >> hearts >> vx >> vy >> px >> py >> tx >> ty >> psx >> psy;
         switch(eType){
             case CASUAL:
-                return new Casual("dem.png", sf::Vector2f(tx,ty),sf::Vector2f (px,py),sf::Vector2f(vx,vy),shootTimer,isActive, hearts, EnemyType::CASUAL);
+                return new Casual("dem.png", sf::Vector2f(tx,ty),sf::Vector2f (px,py),sf::Vector2f(vx,vy),shootTimer,isActive, hearts, EnemyType::CASUAL,sf::Vector2f(psx, psy) );
             case SPEEDY:
-                return new Speedy("dem.png", sf::Vector2f(tx,ty),sf::Vector2f (px,py),sf::Vector2f(vx,vy),shootTimer,isActive, hearts, EnemyType::SPEEDY);
+                return new Speedy("dem.png", sf::Vector2f(tx,ty),sf::Vector2f (px,py),sf::Vector2f(vx,vy),shootTimer,isActive, hearts, EnemyType::SPEEDY,sf::Vector2f(psx, psy));
             case FATMAN:
-                return new Fatman("dem.png", sf::Vector2f(tx,ty),sf::Vector2f (px,py),sf::Vector2f(vx,vy),shootTimer,isActive, hearts, EnemyType::FATMAN);
+                return new Fatman("dem.png", sf::Vector2f(tx,ty),sf::Vector2f (px,py),sf::Vector2f(vx,vy),shootTimer,isActive, hearts, EnemyType::FATMAN,sf::Vector2f(psx, psy));
             case BOSS:
-                return new Boss("dem.png", sf::Vector2f(tx,ty),sf::Vector2f (px,py),sf::Vector2f(vx,vy),shootTimer,isActive, hearts, EnemyType::BOSS);
+                return new Boss("dem.png", sf::Vector2f(tx,ty),sf::Vector2f (px,py),sf::Vector2f(vx,vy),shootTimer,isActive, hearts, EnemyType::BOSS,sf::Vector2f(psx, psy));
             default:
-                return new Enemy("dem.png", sf::Vector2f(tx,ty),sf::Vector2f (px,py),sf::Vector2f(vx,vy),shootTimer,isActive, hearts, EnemyType::BOSS);
+                return new Enemy("dem.png", sf::Vector2f(tx, ty), sf::Vector2f(px, py), sf::Vector2f(vx, vy),
+                                 shootTimer, isActive, hearts, EnemyType::BOSS, sf::Vector2f(psx, psy));
 
         }
 
@@ -193,5 +207,5 @@ Character* Game::createPlayer(std::string data){
     float vx,vy, shootTimer,px,py;
     int hearts, tx,ty;
     ss >> vx >> vy >>hearts >>shootTimer >>px >> py >> tx >> ty;
-    return new Character("dem.png", sf::Vector2f(tx,ty), sf::Vector2f (px,py),sf::Vector2f(vx,vy),shootTimer,hearts);
+    return new Character("dem.png", sf::Vector2f(tx, ty), sf::Vector2f(px, py), sf::Vector2f(vx, vy), shootTimer, hearts);
 }

@@ -9,7 +9,7 @@
 
 class Fatman : public Enemy {
 public:
-    Fatman(std::string,sf::Vector2f, sf::Vector2f,  sf::Vector2f, float, bool, int, EnemyType);
+    Fatman(std::string,sf::Vector2f, sf::Vector2f,  sf::Vector2f, int, bool, int, EnemyType, sf::Vector2f );
     void collideEffect(Tile *, sf::Vector2f) override;
     void move(sf::Vector2f) override;
 

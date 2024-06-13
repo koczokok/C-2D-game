@@ -22,11 +22,11 @@ public:
     void setUpInitialState(bool);
     void drawEnemyProjectiles(sf::RenderWindow&);
     void chcekProjectileCollison(Tile * tile);
-    void checkEnemyCollisionProjectile(Character&);
-    void checkPlayerHit(Character&);
-    void drawTiles(sf::RenderWindow&, Character&);
-    void drawRoomAndEnemies(sf::RenderWindow&, Character&);
-    void activateRoom(Character&, int&);
+    void checkEnemyCollisionProjectile();
+    void checkPlayerHit();
+    void drawTiles(sf::RenderWindow&);
+    void drawRoomAndEnemies(sf::RenderWindow&);
+    void activateRoom(int&);
     std::vector<std::vector<Tile *>> tiles;
     std::vector<Room *> rooms;
     std::vector<Projectile *> projectiles;
@@ -35,7 +35,7 @@ public:
     World();
     World(bool, bool);
     void save( );
-    void renderMain(sf::RenderWindow&, Character& player, int&);
+    void renderMain(sf::RenderWindow&, int&);
 
 
 };

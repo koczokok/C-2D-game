@@ -15,11 +15,11 @@ class World;
 class Game{
 public:
     Game();
-    void save(World&, Character&);
+    void save(World&, std::string);
     State gameState;
     std::string makeString(auto s);
 
-    void loadSave(std::string path, World& world, Character&);
+    void loadSave(std::string path, World& world);
 
     Room* createRoom(std::string data);
 
@@ -29,7 +29,7 @@ public:
 
     Tile *createTile(std::string data);
 
-    Character *createPlayer(std::string data);
+    static Character* createPlayer(std::string data);
 };
 
 #endif //PJC_GAME_GAME_H

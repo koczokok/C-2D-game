@@ -14,13 +14,13 @@ class Game;
 class Character{
 public:
     sf::Texture characterTexture;
-    float shootTimer;
+    int shootTimer;
     sf::Sprite characterSprite;
     sf::Vector2f velocity;
     bool isCollision;
     std::vector<Projectile *> projectiles;
 
-    Character(const std::string &, sf::Vector2f, sf::Vector2f, sf::Vector2f, float, int);
+    Character(const std::string &, sf::Vector2f, sf::Vector2f, sf::Vector2f, int, int);
     virtual bool collide(Tile * tile);
     void checkProjectileCollisions(Tile * tile);
 

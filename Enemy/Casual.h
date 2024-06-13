@@ -10,9 +10,9 @@
 
 class Casual : public Enemy {
 public:
-
+    sf::Vector2f shootingSpeed;
     void collideEffect(Tile *, sf::Vector2f) override;
     std::vector<Projectile*>shoot(const std::string &, sf::Vector2f playerPos) override;
-    Casual(std::string,sf::Vector2f, sf::Vector2f,  sf::Vector2f, float, bool, int, EnemyType);
+    Casual(std::string,sf::Vector2f, sf::Vector2f,  sf::Vector2f, int, bool, int, EnemyType, sf::Vector2f);
 };
 #endif //PJC_GAME_CASUAL_H

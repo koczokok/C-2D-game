@@ -10,8 +10,16 @@ Casual::Casual(std::string textureName,
                sf::Vector2f position,
 
                sf::Vector2f v,
-               float shootTimer, bool isActive, int hearts,  EnemyType e) : Enemy
-               (textureName, texturePos, position, v, shootTimer, isActive, hearts, e) {
+               int shootTimer, bool isActive, int hearts,  EnemyType e, sf::Vector2f shootingSpeed) : Enemy
+                                                                                                                              (textureName,
+                                                                                                                               texturePos,
+                                                                                                                               position,
+                                                                                                                               v,
+                                                                                                                               shootTimer,
+                                                                                                                               isActive,
+                                                                                                                               hearts,
+                                                                                                                               e,
+                                                                                                                               shootingSpeed), shootingSpeed(shootingSpeed) {
 
 
 }
@@ -19,7 +27,7 @@ Casual::Casual(std::string textureName,
 
 std::vector<Projectile*> Casual::shoot(const std::string &, sf::Vector2f playerPos) {
 
-    return std::vector<Projectile*>{ new Projectile("",characterSprite.getPosition(), sf::Vector2f (-3,0))};
+    return std::vector<Projectile*>{ new Projectile("",characterSprite.getPosition(), shootingSpeed)};
 
 }
 

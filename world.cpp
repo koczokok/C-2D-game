@@ -11,18 +11,21 @@
 #include "Enemy/Speedy.h"
 #include "Enemy/Fatman.h"
 #include "eType.h"
+#include "Enemy/Boss.h"
 
 World::World() {
     setUpInitialState(true);
     setUpEnemies(true);
     player = new Character("dem.png", sf::Vector2f(0, 0), sf::Vector2f(200, 440),
-              sf::Vector2f(0, 0), 20.f, 5);
+                       sf::Vector2f(0, 0), 20.f, 5);
     fmt::println("{}", "Random world created");
 }
 
-World::World(bool createRooms, bool createEnemies) {
+World::World(bool createRooms, bool createEnemies)  {
     setUpInitialState(createRooms);
     setUpEnemies(createEnemies);
+    player = new Character("dem.png", sf::Vector2f(0, 0), sf::Vector2f(200, 440),
+                           sf::Vector2f(0, 0), 20.f, 5);
 }
 
 
@@ -104,24 +107,38 @@ void World::setUpInitialState(bool createRooms) {
 
 void World::setUpEnemies(bool is) {
     if(is){
-    rooms.at(4)->enemies.push_back(new Casual("dem.png",sf::Vector2f(0,16), sf::Vector2f(16*52,30*16), sf::Vector2f(0,0.5), 40.f,
-                                              false,2, EnemyType::CASUAL));
-    rooms.at(4)->enemies.push_back(new Casual("dem.png",sf::Vector2f(0,16), sf::Vector2f(16*50,35*16), sf::Vector2f(0,0.5), 40.f,
-                                              false,2, EnemyType::SPEEDY));
-//    rooms.at(1)->enemies.push_back(new Speedy("dem.png",sf::Vector2f(16,0), sf::Vector2f(16*48,7*16), sf::Vector2f(0,3), 40.f,
-//                                              false, 3));
-//    rooms.at(1)->enemies.push_back(new Casual("dem.png",sf::Vector2f(0,16), sf::Vector2f(16*52,5*16), sf::Vector2f(0,0.5), 40.f,
-//                                              false,2));
-//    rooms.at(1)->enemies.push_back(new Casual("dem.png",sf::Vector2f(0,16), sf::Vector2f(16*37,12*16), sf::Vector2f(0,0.5), 40.f,
-//                                              false,2));
-//    rooms.at(1)->enemies.push_back(new Speedy("dem.png",sf::Vector2f(16,0), sf::Vector2f(16*40,9*16), sf::Vector2f(0,3), 40.f,
-//                                              false, 3));
-//    rooms.at(2)->enemies.push_back(new Fatman("dem.png",sf::Vector2f(64,0), sf::Vector2f(16*85,5*16), sf::Vector2f(0,3), 40.f,
-//                                              false, 5));
-//    rooms.at(2)->enemies.push_back(new Speedy("dem.png",sf::Vector2f(16,0), sf::Vector2f(16*67,9*16), sf::Vector2f(0,3), 40.f,
-//                                              false, 3));
-//    rooms.at(2)->enemies.push_back(new Casual("dem.png",sf::Vector2f(0,16), sf::Vector2f(16*71,12*16), sf::Vector2f(0,0.5), 40.f,
-//                                              false,2));
+    rooms.at(4)->enemies.push_back(new Casual("dem.png",sf::Vector2f(0,16), sf::Vector2f(16*52,30*16), sf::Vector2f(0,0.5), 150.f,
+                                              false,2, EnemyType::CASUAL,sf::Vector2f (-3,0)));
+    rooms.at(4)->enemies.push_back(new Casual("dem.png",sf::Vector2f(0,16), sf::Vector2f(16*50,35*16), sf::Vector2f(0,0.5), 150.f,
+                                              false,2, EnemyType::CASUAL,sf::Vector2f (-3,0)));
+    rooms.at(1)->enemies.push_back(new Speedy("dem.png",sf::Vector2f(16,0), sf::Vector2f(16*48,7*16), sf::Vector2f(0,3), 80.f,
+                                              false, 3, EnemyType::SPEEDY,sf::Vector2f (0,0)));
+    rooms.at(1)->enemies.push_back(new Casual("dem.png",sf::Vector2f(0,16), sf::Vector2f(16*52,5*16), sf::Vector2f(0,0.5), 100.f,
+                                              false,2, EnemyType::CASUAL,sf::Vector2f (-3,0)));
+    rooms.at(1)->enemies.push_back(new Casual("dem.png",sf::Vector2f(0,16), sf::Vector2f(16*37,12*16), sf::Vector2f(0,0.5), 100.f,
+                                              false,2, EnemyType::CASUAL,sf::Vector2f (-3,0)));
+    rooms.at(1)->enemies.push_back(new Speedy("dem.png",sf::Vector2f(16,0), sf::Vector2f(16*40,9*16), sf::Vector2f(0,3), 70.f,
+                                              false, 3, EnemyType::SPEEDY,sf::Vector2f (0,0)));
+    rooms.at(2)->enemies.push_back(new Fatman("dem.png",sf::Vector2f(64,0), sf::Vector2f(16*85,5*16), sf::Vector2f(0,1), 170.f,
+                                              false, 5, EnemyType::FATMAN,sf::Vector2f (0,0)));
+    rooms.at(2)->enemies.push_back(new Speedy("dem.png",sf::Vector2f(16,0), sf::Vector2f(16*67,9*16), sf::Vector2f(0,3), 70.f,
+                                              false, 3, EnemyType::SPEEDY,sf::Vector2f (0,0)));
+    rooms.at(2)->enemies.push_back(new Casual("dem.png",sf::Vector2f(0,16), sf::Vector2f(16*71,12*16), sf::Vector2f(0,0.5), 100.f,
+                                              false,2, EnemyType::CASUAL,sf::Vector2f (-3,0)));
+    rooms.at(5)->enemies.push_back(new Casual("dem.png", sf::Vector2f(0,16), sf::Vector2f(16*36, 61*16),sf::Vector2f(0,0.5), 70.f,false, 2,EnemyType::CASUAL ,sf::Vector2f (3,0)));
+        rooms.at(5)->enemies.push_back(new Casual("dem.png", sf::Vector2f(0,16), sf::Vector2f(16*52, 55*16),sf::Vector2f(0,0.5), 70.f,false, 2,EnemyType::CASUAL ,sf::Vector2f (-3,0)));
+        rooms.at(5)->enemies.push_back(new Speedy("dem.png",sf::Vector2f(16,0), sf::Vector2f(16*46,61*16), sf::Vector2f(0,2), 40.f,
+                                                  false, 3, EnemyType::SPEEDY,sf::Vector2f (0,0)));
+        rooms.at(6)->enemies.push_back(new Fatman("dem.png",sf::Vector2f(16,0), sf::Vector2f(16*66,55*16), sf::Vector2f(0,1.5), 150.f,
+                                                  false, 3, EnemyType::SPEEDY,sf::Vector2f (0,0)));
+        rooms.at(6)->enemies.push_back(new Speedy("dem.png",sf::Vector2f(16,0), sf::Vector2f(16*84,61*16), sf::Vector2f(0,1.5), 90.f,
+                                                  false, 3, EnemyType::SPEEDY,sf::Vector2f (0,0)));
+        rooms.at(6)->enemies.push_back(new Speedy("dem.png",sf::Vector2f(16,0), sf::Vector2f(16*84,55*16), sf::Vector2f(0,1.5), 105.f,
+                                                  false, 3, EnemyType::SPEEDY,sf::Vector2f (0,0)));
+        rooms.at(6)->enemies.push_back(new Fatman("dem.png",sf::Vector2f(16,0), sf::Vector2f(16*66,61*16), sf::Vector2f(0,1.5), 120.f,
+                                                  false, 3, EnemyType::SPEEDY,sf::Vector2f (0,0)));
+        rooms.at(7)->enemies.push_back(new Boss("dem.png",sf::Vector2f(16,0), sf::Vector2f(16*106,58*16), sf::Vector2f(0,1.5), 120.f,
+                                                  false, 3, EnemyType::SPEEDY,sf::Vector2f (0,0)));
     }
 }
 
@@ -148,16 +165,16 @@ void World::checkEnemyCollisions(sf::Vector2f playerPos) {
 
 }
 
-void World::checkEnemyCollisionProjectile(Character& player) {
+void World::checkEnemyCollisionProjectile() {
     auto shouldbrake = false;
-    for(auto& p : player.projectiles) {
+    for(auto& p : player->projectiles) {
         for (auto & r: rooms) {
             for (auto const &e: r->enemies) {
 
                 if (e->characterSprite.getGlobalBounds().intersects(p->circle.getGlobalBounds())) {
                     e->hearts--;
-                    auto iterProjectile = std::ranges::find(player.projectiles, p);
-                    player.projectiles.erase(iterProjectile);
+                    auto iterProjectile = std::ranges::find(player->projectiles, p);
+                    player->projectiles.erase(iterProjectile);
                     if(e->hearts<=0) {
                         fmt::println("{}", "intersects");
                         auto iter = std::ranges::find(r->enemies.begin(), r->enemies.end(), e);
@@ -186,27 +203,27 @@ void World::chcekProjectileCollison(Tile *tile) {
 
 }
 
-void World::checkPlayerHit(Character & player) {
+void World::checkPlayerHit() {
     for(auto & p : projectiles){
-        if(p->circle.getGlobalBounds().intersects(player.characterSprite.getGlobalBounds())){
+        if(p->circle.getGlobalBounds().intersects(player->characterSprite.getGlobalBounds())){
             projectiles.erase(std::ranges::find(projectiles, p));
-            player.hearts--;
+            player->hearts--;
         }
     }
 
 }
 
-void World::drawTiles(sf::RenderWindow& window, Character& player){
+void World::drawTiles(sf::RenderWindow& window){
     for (auto const &tile: tiles) {
         for (auto const &j: tile) {
             window.draw(j->sprite);
-            player.collide(j);
-            player.checkProjectileCollisions(j);
+            player->collide(j);
+            player->checkProjectileCollisions(j);
         }
     }
 }
 
-void World::drawRoomAndEnemies(sf::RenderWindow & window, Character & player) {
+void World::drawRoomAndEnemies(sf::RenderWindow & window) {
     for (auto &r: rooms) {
 
         if (r->enemies.size() > 0) {
@@ -216,27 +233,27 @@ void World::drawRoomAndEnemies(sf::RenderWindow & window, Character & player) {
                         window.draw(t->sprite);
                     }
                     window.draw(e->characterSprite);
-                    e->move(player.characterSprite.getPosition());
+                    e->move(player->characterSprite.getPosition());
                 }
             }
         }
     }
 }
 
-void World::renderMain(sf::RenderWindow & window, Character & player, int& shootTimer) {
-    checkEnemyCollisions(player.characterSprite.getPosition());
-    checkPlayerHit(player);
-    checkEnemyCollisionProjectile(player);
+void World::renderMain(sf::RenderWindow & window, int& shootTimer) {
+    checkEnemyCollisions(player->characterSprite.getPosition());
+    checkPlayerHit();
+    checkEnemyCollisionProjectile();
 
-    drawTiles(window, player);
-    activateRoom(player, shootTimer);
+    drawTiles(window);
+    activateRoom( shootTimer);
     drawEnemyProjectiles(window);
-    drawRoomAndEnemies(window, player);
+    drawRoomAndEnemies(window);
 }
 
-void World::activateRoom(Character & player, int& shootTimer) {
+void World::activateRoom (int& shootTimer) {
     for (auto &r: rooms) {
-        if (r->bounds.intersects(player.characterSprite.getGlobalBounds()) && !r->enemies.empty()) {
+        if (r->bounds.intersects(player->characterSprite.getGlobalBounds()) && !r->enemies.empty()) {
             r->isActive = true;
             for (auto t: r->exits) {
                 if (r->spikes.size() < r->exits.size()) {
@@ -249,16 +266,23 @@ void World::activateRoom(Character & player, int& shootTimer) {
             r->spikes.clear();
             r->deactive();
         }
-        if (shootTimer > 40) {
-            if (r->isActive) {
+
+        if(shootTimer == INT32_MAX){
+            shootTimer = 0;
+        }
+        if (r->isActive) {
                 for (auto &e: r->enemies) {
-                    for(auto p : e->shoot("", player.characterSprite.getPosition())){
-                        projectiles.push_back(p);
+                    if(shootTimer % e->shootTimer == 0){
+                        fmt::println("100");
+                        for(auto p : e->shoot("", player->characterSprite.getPosition())){
+                            projectiles.push_back(p);
+                        }
                     }
-                    shootTimer = 0;
+
+
                 }
             }
-        }
+
     }
 }
 

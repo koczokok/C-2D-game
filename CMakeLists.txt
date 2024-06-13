@@ -49,6 +49,14 @@ add_executable(PJC_Game main.cpp
         game.cpp
         game.h
         eType.h
+        HUD.cpp
+        HUD.h
+        saveDialog.cpp
+        saveDialog.h
+        chooseSave.cpp
+        chooseSave.h
+        mainMenu.cpp
+        mainMenu.h
 )
 
 target_link_libraries(PJC_Game sfml-graphics)

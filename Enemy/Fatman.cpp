@@ -9,10 +9,17 @@
 Fatman::Fatman(std::string textureName,
                sf::Vector2f texturePos,
                sf::Vector2f position,
-
                sf::Vector2f v,
-               float shootTimer, bool isActive, int hearts,  EnemyType e) : Enemy
-                                           (textureName, texturePos, position, v, shootTimer, isActive, hearts, e) {
+               int shootTimer, bool isActive, int hearts,  EnemyType e, sf::Vector2f shootingSpeed) : Enemy
+                                                                                                                              (textureName,
+                                                                                                                               texturePos,
+                                                                                                                               position,
+                                                                                                                               v,
+                                                                                                                               shootTimer,
+                                                                                                                               isActive,
+                                                                                                                               hearts,
+                                                                                                                               e,
+                                                                                                                               shootingSpeed) {
 
 
 }

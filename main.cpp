@@ -5,13 +5,19 @@
 #include "world.h"
 #include "Menu.h"
 #include "game.h"
+#include "HUD.h"
+#include "mainMenu.h"
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 int main() {
     auto game = Game();
     World world = World(false, false);
-    auto shootTimer = 0;
-
+    int shootTimer = 0;
+    sf::Texture playerText;
+    if (!playerText.loadFromFile("C:\\Users\\pkury\\CLionProjects\\PJC-Game\\resources\\dem.png")) {
+        return EXIT_FAILURE;
+    }
+    world.player->characterSprite.setTexture(playerText);
     auto view = sf::View();
     view.reset(sf::FloatRect(0, 0, 400, 240));
     auto window = sf::RenderWindow(
@@ -29,32 +35,35 @@ int main() {
         return EXIT_FAILURE;
     }
     sf::Sprite backgroundSprite(background);
-    // Player
 
+    auto hud = HUD(window, world.player->hearts);
 
     //Enemy
 
     auto settings = Menu(font, sf::Vector2f(150,25), sf::Vector2f (125, 50), 10, 4, std::vector<std::string>{"Resume", "Save", "Options","Exit"});
-    auto menu = Menu(font, sf::Vector2f(150,25), sf::Vector2f(125,100), 10, 3, std::vector<std::string>{"New Game", "Load from save", "Quit"});
+    auto menu = MainMenu(font, sf::Vector2f(150, 25), sf::Vector2f(125, 100), 10, 3,
+                         std::vector<std::string>{"New Game", "Load from save", "Quit"});
     bool left, right, up, down;
     while (window.isOpen()) {
         auto event = sf::Event();
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
-                window.close();
+            if (event.type == sf::Event::Closed){
+                                window.close();
+            }
+
 
         }
-
+//        fmt::println("{}", world.player->hearts);
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-          menu.checkButtonClick(sf::Mouse::getPosition(window), game, world, player);
-          settings.checkButtonClick(sf::Mouse::getPosition(window), game, world, player);
+          menu.checkButtonClick(sf::Mouse::getPosition(window), game, world, window);
+          settings.checkButtonClick(sf::Mouse::getPosition(window), game, world, window, font);
         }
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt)){
-            game.loadSave("example.txt", world, player);
+
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
-//           game.gameState = State::PAUSE;
-game.save(world, player);
+           game.gameState = State::PAUSE;
+//game.save(world);
         }
         //Keyboard events
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
@@ -75,32 +84,32 @@ game.save(world, player);
             down = true;
         else
             down = false;
-        player.shootTimer++;
-        if (player.shootTimer > 10) {
-            auto global = player.characterSprite.getGlobalBounds();
+        world.player->shootTimer++;
+        if (world.player->shootTimer > 10) {
+            auto global = world.player->characterSprite.getGlobalBounds();
             auto pos = sf::Vector2f (global.left + (global.width / 2), global.top + (global.height / 2));
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-                player.projectiles.push_back(new Projectile("Chuj", pos,
+                world.player->projectiles.push_back(new Projectile("Chuj", pos,
                                                             sf::Vector2f(-5 ,0)));
-                player.shootTimer = 0;
+                world.player->shootTimer = 0;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-                player.projectiles.push_back(new Projectile("Chuj", pos,
+                world.player->projectiles.push_back(new Projectile("Chuj", pos,
                                                             sf::Vector2f(0 ,
                                                                          -5 )));
-                player.shootTimer = 0;
+                world.player->shootTimer = 0;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-                player.projectiles.push_back(new Projectile("Chuj",pos,
+                world.player->projectiles.push_back(new Projectile("Chuj",pos,
                                                             sf::Vector2f(0 ,
                                                                          5 )));
-                player.shootTimer = 0;
+                world.player->shootTimer = 0;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-                player.projectiles.push_back(new Projectile("Chuj", pos,
+                world.player->projectiles.push_back(new Projectile("Chuj", pos,
                                                             sf::Vector2f(5,
                                                                          0 )));
-                player.shootTimer = 0;
+                world.player->shootTimer = 0;
             }
         }
 
@@ -132,17 +141,20 @@ game.save(world, player);
             continue;
         }
         if(game.gameState == State::GAME) {
-            player.updateMovement(up, down, right, left);
-            view.setCenter(player.characterSprite.getPosition());
+            world.player->updateMovement(up, down, right, left);
+            view.setCenter(world.player->characterSprite.getPosition());
             window.setView(view);
             window.clear();
-            world.renderMain(window, player, shootTimer);
-            shootTimer++;
-            player.playerRender(window, game);
-            for(auto s : world.rooms[4]->exits){
-                fmt::println("{} {}",s->pos.x, s->pos.y);
 
-            }
+
+
+
+            world.renderMain(window, shootTimer);
+            window.draw(world.player->characterSprite);
+
+            hud.setHudPosition(window, world.player->hearts);
+            shootTimer++;
+            world.player->playerRender(window, game);
             window.display();
             continue;
         }
@@ -151,3 +163,4 @@ game.save(world, player);
 
 
 }
+
