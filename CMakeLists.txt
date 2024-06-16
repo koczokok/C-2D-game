@@ -23,40 +23,39 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(fmt)
 
 add_executable(PJC_Game main.cpp
-        tile.h
-        tile.cpp
-        world.h
-        world.cpp
-        Character.h
-        Character.cpp
-        projectile.h
-        projectile.cpp
-        Enemy/Enemy.cpp
-        Enemy/Enemy.h
-        Enemy/Casual.cpp
-        Enemy/Casual.h
-        Enemy/Speedy.cpp
-        Enemy/Speedy.h
-        Enemy/Fatman.cpp
-        Enemy/Fatman.h
-        Enemy/Boss.cpp
-        Enemy/Boss.h
+        Room/tile.h
+        Room/tile.cpp
+        Game/world.h
+        Game/world.cpp
+        Characters/player/Character.h
+        Characters/player/Character.cpp
+        Characters/projectile.h
+        Characters/projectile.cpp
+        Characters/Enemy.cpp
+        Characters/Enemy.h
+        Characters/Casual.cpp
+        Characters/Casual.h
+        Characters/Speedy.cpp
+        Characters/Speedy.h
+        Characters/Fatman.cpp
+        Characters/Fatman.h
+        Characters/Boss.cpp
+        Characters/Boss.h
         Room/Room.cpp
         Room/Room.h
-        Menu.cpp
-        Menu.h
-        GameStates.h
-        game.cpp
-        game.h
-        eType.h
-        HUD.cpp
-        HUD.h
-        saveDialog.cpp
-        saveDialog.h
-        chooseSave.cpp
-        chooseSave.h
-        mainMenu.cpp
-        mainMenu.h
+        Menus/Menu.cpp
+        Menus/Menu.h
+        Game/GameStates.h
+        Game/game.cpp
+        Game/game.h
+        Characters/eType.h
+        Game/HUD.cpp
+        Game/HUD.h
+        Menus/mainMenu.cpp
+        Menus/mainMenu.h
+        Game/gameWon.cpp
+        Game/gameWon.h
+
 )
 
 target_link_libraries(PJC_Game sfml-graphics)

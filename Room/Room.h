@@ -4,9 +4,9 @@
 
 #ifndef PJC_GAME_ROOM_H
 #define PJC_GAME_ROOM_H
-#include "../tile.h"
-#include "../Enemy/enemy.h"
-#include "../Enemy/Casual.h"
+#include "tile.h"
+#include "../Characters/enemy.h"
+#include "../Characters/Casual.h"
 
 class Room {
 
