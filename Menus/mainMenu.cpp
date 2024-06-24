@@ -55,8 +55,11 @@ void MainMenu::checkButtonClick(sf::Vector2i vector, Game &game, World &world) {
                         sf::sleep(sf::milliseconds(100));
 
                     }
-                    if (text == "Exit")
+                    if (text == "Quit"){
+                        fmt::println("{}","Exit");
                         game.gameState = State::QUIT;
+                    }
+
                 }
             }
         }

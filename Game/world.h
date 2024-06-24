@@ -15,7 +15,10 @@
 
 class Game;
 class World {
-
+    void copyTiles(const World& other);
+    void copyRooms(const World& other);
+    void copyProjectiles(const World& other);
+    void cleanup();
     void setUpEnemies(bool);
     void setUpInitialState(bool);
     void drawEnemyProjectiles(sf::RenderWindow&);
@@ -35,10 +38,14 @@ public:
     std::vector<Projectile *> projectiles;
 
     World();
-    World(bool, bool);
-    void renderMain(sf::RenderWindow&, int&, Game&);
-
-
+    World(const World& other); // Copy constructor
+    World(World&& other) noexcept; // Move constructor
+    World(bool param1, bool param2);
+    ~World(); // Destructor
+    void renderMain(sf::RenderWindow& window, int& someInt, Game& game);
     void checkEnemyPlayerCollision();
+
+    World& operator=(const World& other); // Copy assignment operator
+    World& operator=(World&& other) noexcept;
 };
 #endif //PJC_GAME_WORLD_H

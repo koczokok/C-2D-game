@@ -21,6 +21,13 @@ public:
     sf::Vector2f velocity;
     std::vector<Projectile *> projectiles;
     Character(const std::string &, sf::Vector2f, sf::Vector2f, sf::Vector2f, int, int);
+    void copy(const Character& other);
+    void clearProjectiles();
+    Character(const Character& other); // Copy constructor
+    Character& operator=(const Character& other); // Copy assignment operator
+    Character(Character&& other) noexcept; // Move constructor
+    Character& operator=(Character&& other) noexcept; // Move assignment operator
+    virtual ~Character(); // Virtual destructor
     virtual bool collide(Tile * tile);
     void checkProjectileCollisions(Tile * tile);
     sf::Vector2f updateMovement(bool, bool, bool, bool);
@@ -28,7 +35,7 @@ public:
     void moveAndDrawPlayerProjectiles(sf::RenderWindow& window);
     void checkIfPlayerAlive(Game&) const;
     void playerRender(sf::RenderWindow&, Game&);
-    ~Character();
+
 
 
 

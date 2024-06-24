@@ -165,10 +165,73 @@ void Character::playerRender(sf::RenderWindow& window, Game& gameState ){
     checkIfPlayerAlive(gameState);
 }
 
-Character::~Character() {
-        for(Projectile* p :projectiles){
-            delete p;
-        }
+Character::Character(const Character& other)
+        : shootTimer(other.shootTimer), velocity(other.velocity), hearts(other.hearts) {
+    characterTexture = other.characterTexture; // sf::Texture is copy-assignable
+    characterSprite = other.characterSprite;   // sf::Sprite is copy-assignable
+
+    copy(other);
 }
+
+Character& Character::operator=(const Character& other) {
+    if (this != &other) {
+        shootTimer = other.shootTimer;
+        velocity = other.velocity;
+        hearts = other.hearts;
+        characterTexture = other.characterTexture; // sf::Texture is copy-assignable
+        characterSprite = other.characterSprite;   // sf::Sprite is copy-assignable
+
+        copy(other);
+    }
+    return *this;
+}
+
+Character::Character(Character&& other) noexcept
+        : shootTimer(other.shootTimer), velocity(other.velocity), hearts(other.hearts) {
+    characterTexture = std::move(other.characterTexture); // sf::Texture is move-assignable
+    characterSprite = std::move(other.characterSprite);   // sf::Sprite is move-assignable
+
+    // Move projectiles
+    projectiles = std::move(other.projectiles);
+    other.projectiles.clear();
+}
+
+Character& Character::operator=(Character&& other) noexcept {
+    if (this != &other) {
+        shootTimer = other.shootTimer;
+        velocity = other.velocity;
+        hearts = other.hearts;
+        characterTexture = std::move(other.characterTexture); // sf::Texture is move-assignable
+        characterSprite = std::move(other.characterSprite);   // sf::Sprite is move-assignable
+
+        // Move projectiles
+        clearProjectiles();
+        projectiles = std::move(other.projectiles);
+        other.projectiles.clear();
+    }
+    return *this;
+}
+
+Character::~Character() {
+    clearProjectiles();
+}
+
+void Character::copy(const Character& other) {
+    // Copy projectiles
+    projectiles.clear();
+    projectiles.reserve(other.projectiles.size());
+    for (auto& projectile : other.projectiles) {
+        projectiles.push_back(new Projectile(*projectile));
+    }
+}
+
+void Character::clearProjectiles() {
+    for (auto& projectile : projectiles) {
+        delete projectile;
+    }
+    projectiles.clear();
+}
+
+
 
 

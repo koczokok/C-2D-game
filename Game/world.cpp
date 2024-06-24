@@ -5,6 +5,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <utility>
 #include "world.h"
 #include "fmt/core.h"
 #include "../Characters/Casual.h"
@@ -29,29 +30,29 @@ World::World(bool createRooms, bool createEnemies)  {
                            sf::Vector2f(0, 0), 0.f, 5);
 }
 
-World::~World(){
-    for(Room* r : rooms){
-        for(Enemy* e : r->enemies){
-            delete e;
-        }
-        for(Tile* s : r->spikes){
-            delete s;
-        }
-        for(Tile* e : r->exits){
-            delete e;
-        }
-        delete r;
-    }
-    delete player;
-    for(const auto& t : tiles){
-        for(Tile* t1: t){
-            delete t1;
-        }
-    }
-    for(Projectile* p : projectiles){
-        delete p;
+World::~World() {
+    cleanup();
+}
+
+World::World(World&& other) noexcept
+        : player(std::exchange(other.player, nullptr)),
+          tiles(std::move(other.tiles)),
+          rooms(std::move(other.rooms)),
+          projectiles(std::move(other.projectiles)) {
+    // Move constructor
+}
+World::World(const World& other)
+        : player(nullptr) {
+    copyTiles(other);
+    copyRooms(other);
+    copyProjectiles(other);
+
+    // Copy player
+    if (other.player) {
+        player = new Character(*other.player);
     }
 }
+
 
 
 
@@ -248,8 +249,11 @@ void World::chcekProjectileCollison(Tile *tile) {
 }
 
 void World::checkPlayerHit() {
+    auto playerBound = sf::Rect<float>(2,2,12,13);
+    playerBound.top += player->characterSprite.getGlobalBounds().top;
+    playerBound.left += player->characterSprite.getGlobalBounds().left;
     for(auto & p : projectiles){
-        if(p->circle.getGlobalBounds().intersects(player->characterSprite.getGlobalBounds())){
+        if(p->circle.getGlobalBounds().intersects(playerBound)){
             projectiles.erase(std::ranges::find(projectiles, p));
             player->hearts--;
 
@@ -348,4 +352,84 @@ void World::drawEnemyProjectiles(sf::RenderWindow & window) {
         p->circle.move(p->velocity);
     }
 
+}
+World& World::operator=(const World& other) {
+    if (this != &other) {
+        cleanup();
+        copyTiles(other);
+        copyRooms(other);
+        copyProjectiles(other);
+
+        // Copy player
+        delete player;
+        player = nullptr;
+        if (other.player) {
+            player = new Character(*other.player);
+        }
+    }
+    return *this;
+}
+
+World& World::operator=(World&& other) noexcept {
+    if (this != &other) {
+        cleanup();
+        player = std::exchange(other.player, nullptr);
+        tiles = std::move(other.tiles);
+        rooms = std::move(other.rooms);
+        projectiles = std::move(other.projectiles);
+    }
+    return *this;
+}
+void World::copyTiles(const World& other) {
+    tiles.clear();
+    tiles.reserve(other.tiles.size());
+    for (const auto& row : other.tiles) {
+        std::vector<Tile*> rowTiles;
+        rowTiles.reserve(row.size());
+        for (const auto& tile : row) {
+            rowTiles.push_back(new Tile(*tile));
+        }
+        tiles.push_back(std::move(rowTiles));
+    }
+}
+void World::copyRooms(const World& other) {
+    rooms.clear();
+    rooms.reserve(other.rooms.size());
+    for (const auto& room : other.rooms) {
+        rooms.push_back(new Room(*room));
+    }
+}
+void World::copyProjectiles(const World& other) {
+    projectiles.clear();
+    projectiles.reserve(other.projectiles.size());
+    for (const auto& projectile : other.projectiles) {
+        projectiles.push_back(new Projectile(*projectile));
+    }
+}
+
+void World::cleanup() {
+    // Clean up tiles
+    for (auto& row : tiles) {
+        for (auto& tile : row) {
+            delete tile;
+        }
+        row.clear();
+    }
+    tiles.clear();
+
+    // Clean up rooms
+//    for (auto& room : rooms) {
+//        delete room;
+//    }
+    rooms.clear();
+
+    // Clean up projectiles
+    for (auto& projectile : projectiles) {
+        delete projectile;
+    }
+    projectiles.clear();
+
+    // Clean up player
+    delete player;
+    player = nullptr;
 }

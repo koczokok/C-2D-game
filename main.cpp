@@ -68,14 +68,6 @@ int main() {
           settings.checkButtonClick(sf::Mouse::getPosition(window), game, world, window, font);
         }
 
-        if(event.type == sf::Event::Resized){
-
-
-
-
-
-
-        }
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt)){
 
         }
